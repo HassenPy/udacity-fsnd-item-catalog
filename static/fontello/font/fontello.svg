@@ -1,0 +1,16 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2017 by original authors @ fontello.com</metadata>
+<defs>
+<font id="fontello" horiz-adv-x="1000" >
+<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="search" unicode="&#xe800;" d="M772 78q30-34 6-62l-46-46q-36-32-68 0l-190 190q-74-42-156-42-128 0-223 95t-95 223 90 219 218 91 224-95 96-223q0-88-46-162z m-678 358q0-88 68-156t156-68 151 63 63 153q0 88-68 155t-156 67-151-63-63-151z" horiz-adv-x="789" />
+
+<glyph glyph-name="facebook" unicode="&#xf30c;" d="M500 644l-142 0q-14 0-25-15t-11-37l0-102 178 0 0-148-178 0 0-442-170 0 0 442-152 0 0 148 152 0 0 86q0 94 59 159t147 65l142 0 0-156z" horiz-adv-x="500" />
+
+<glyph glyph-name="gplus" unicode="&#xf30f;" d="M48 572q0 58 25 102t56 65 69 34 56 15 26 2l230 0 0-4q0-22-78-36-28 0-38-6 40-20 54-56t14-96q0-102-68-158-38-38-38-54 0-18 50-64 104-90 104-178 0-140-116-194-68-34-150-34l-4 0-4 2q-2-2-4-2-24 0-54 5t-75 21-74 57-29 103q0 60 32 101t83 57 88 22 71 6l2 0q-16 22-24 47t-8 39l2 14-14 0q-64 0-110 30-74 44-74 160z m370-452q-4 52-43 84t-103 32l-16 0q-64-2-114-46-46-42-42-94t53-80 119-24q68 4 109 40t37 88z m-60 500q-30 108-122 108-12 0-20-2-40-12-58-62-16-50-2-106 14-52 47-85t71-33q12 0 18 2 42 12 63 65t3 113z m388-174l150 0 0-94-150 0 0-150-94 0 0 150-150 0 0 94 150 0 0 150 94 0 0-150z" horiz-adv-x="896" />
+</font>
+</defs>
+</svg>
