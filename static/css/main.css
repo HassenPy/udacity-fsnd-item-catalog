@@ -7,8 +7,12 @@ body {
   /* Alternative bg: rgba(229, 248, 248, 0.3) */
   min-height: 500px;
 }
+/* Bootstrap resets */
 a:hover, a:focus {
   text-decoration: none;
+}
+p {
+  margin: 0;
 }
 
 /* helpers */
@@ -94,13 +98,27 @@ a:hover, a:focus {
 }
 .form-group input {
   display: inline-block;
-  width: 200px;
+  width: 250px;
   max-width: 100%;
   border-radius: 4px;
   border: 1px solid #cdcdcd;
   padding: .3em;
   vertical-align: top;
 }
+.form-group .error-message {
+  display: inline-block;
+  width: 250px;
+  max-width: 100%;
+  padding: .3em;
+  margin-left: 100px;
+  vertical-align: top;
+  color: #F44336;
+}
+.form-group.error input{
+  border-color: #F44336;
+}
+
+
 .form .submit {
   background: #54a8d9;
   color: #fff;
@@ -175,6 +193,10 @@ a:hover, a:focus {
   }
   .form-group label {
     width: 100%;
+  }
+  .form-group .error-message {
+    width: 100%;
+    margin-left: 0;
   }
   .social:not(.inline) {
     width: 100%;
