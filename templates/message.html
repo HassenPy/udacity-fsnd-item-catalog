@@ -47,13 +47,9 @@
 
 
   <div class="container">
-    <div class="message success">
-      <h2 class="text-success">Congratulations!</h2>
-      <p>You are now a member of the Picky! community.</p>
-    </div>
-    <div class="message error">
-      <h2 class="text-error">Congratulations!</h2>
-      <p>You are now a member of the Picky! community.</p>
+    <div class="message {{ message.type }}">
+      <h2 class="text-success">{{ message.header }}</h2>
+      <p>{{ message.body }}</p>
     </div>
   </div>
 
