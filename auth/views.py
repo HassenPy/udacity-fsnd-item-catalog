@@ -1,11 +1,24 @@
 """Authentication views."""
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, redirect
+from flask_login import login_user, login_required, logout_user
 
-from app import db
+from app import db, login_manager
 
 from .models import User
 
 authApp = Blueprint('authApp', __name__)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    """Tell flask-login what query to use to get the user with his id."""
+    return User.query.get(user_id)
+
+
+@authApp.route('/', methods=['GET'])
+def home():
+    """Home page."""
+    return render_template('home.html')
 
 
 @authApp.route('/signup', methods=['GET', 'POST'])
@@ -37,3 +50,32 @@ def signup_success():
         'body': 'You are now a member of the Picky! community.'
     }
     return render_template("message.html", message=message)
+
+
+@authApp.route('/login', methods=['GET', 'POST'])
+def login():
+    """Login management view."""
+    if request.method == "POST":
+        username = request.form['username']
+        password = request.form['password']
+        if not (username or password):
+            return render_template(
+                'login.html',
+                error="Please provide login credentials!"
+            )
+        user = User.query.filter_by(username=username).first()
+        try:
+            user.verify_password(password)
+            login_user(user)
+            return redirect('/')
+        except Exception as e:
+            return render_template('login.html', error=e.args[0])
+    return render_template('login.html', error=None)
+
+
+@authApp.route("/logout", methods=['GET'])
+@login_required
+def logout():
+    """Logout and redirect to home page."""
+    logout_user()
+    return redirect('/')

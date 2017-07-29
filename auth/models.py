@@ -1,5 +1,6 @@
 """sqlalchemy models that represent the authn/authz database."""
 # from sqlalchemy.orm import validates
+from flask_login import UserMixin
 from argon2 import PasswordHasher, exceptions as argon2_exceptions
 from pyisemail import is_email
 
@@ -9,8 +10,8 @@ from app import db
 # http://docs.sqlalchemy.org/en/latest/orm/mapped_attributes.html?highlight=validate#simple-validators
 
 
-class User(db.Model):
-    """Base user model."""
+class User(db.Model, UserMixin):
+    """A fat mode model that handles both the db and login methods."""
 
     __tablename__ = 'users'
 
@@ -18,13 +19,16 @@ class User(db.Model):
     username = db.Column(db.String(12), unique=True)
     password = db.Column(db.String(80))
     email = db.Column(db.String(120), unique=True)
+    active = db.Column(db.Boolean)
 
-    def __init__(self, username, password, email, email1):
+    def __init__(self, username=None, password=None,
+                 email=None, email1=None, active=True):
         """Class constructor."""
         self.username = username
         self.password = password
         self.email = email
         self.email1 = email1
+        self.is_active = active
         self.errors = {}
         self.validators = [
             self.validate_username,
@@ -99,7 +103,7 @@ class User(db.Model):
             ph.verify(self.password, password)
             return True
         except argon2_exceptions.VerifyMismatchError:
-            return False
+            raise Exception("Unvalid credentials.")
 
     def is_valid(self):
         """Check if the values passed to the model are valid."""
@@ -108,6 +112,16 @@ class User(db.Model):
         if self.errors:
             return False
         return True
+
+    def is_active(self):
+        """Return user state, method required by flask-login."""
+        if not self.active:
+            return False
+        return True
+
+    def get_id(self):
+        """Fetch user id on login."""
+        return self.id
 
     def __unicode__(self):
         """Text representation of the User class instance."""
