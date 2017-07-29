@@ -5,6 +5,7 @@ from flask_login import login_user, login_required, logout_user
 from app import db, login_manager
 
 from .models import User
+from .utils import logout_required
 
 authApp = Blueprint('authApp', __name__)
 
@@ -22,6 +23,7 @@ def home():
 
 
 @authApp.route('/signup', methods=['GET', 'POST'])
+@logout_required
 def signup():
     """Signup page view."""
     if request.method == 'POST':
@@ -53,6 +55,7 @@ def signup_success():
 
 
 @authApp.route('/login', methods=['GET', 'POST'])
+@logout_required
 def login():
     """Login management view."""
     if request.method == "POST":
