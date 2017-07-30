@@ -11,7 +11,7 @@ from app import db
 
 
 class User(db.Model, UserMixin):
-    """A fat mode model that handles both the db and login methods."""
+    """A fat model that handles both the db and login methods."""
 
     __tablename__ = 'users'
 
