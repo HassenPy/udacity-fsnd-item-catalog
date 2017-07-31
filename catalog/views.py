@@ -83,13 +83,39 @@ class CategoryAPI(MethodView):
                 return make_response(message, 409)
         return make_response(jsonify(category.errors), 400)
 
+    @login_required
+    @is_admin
+    def delete(self, id):
+        """DELETE method handler."""
+        # Check if passed id is an integer
+        try:
+            category = Category.query.get(int(id))
+        except ValueError:
+            message = jsonify({
+                'error': 'id parameter must be an integer.'
+            })
+            return make_response(message, 400)
+
+        if category:
+            db.session.delete(category)
+            db.session.commit()
+            message = jsonify({
+                "message": "Category successfully deleted."
+            })
+            return make_response(message, 200)
+        else:
+            message = jsonify({
+                "message": "Category doesn't exist."
+            })
+            return make_response(message, 404)
+
 
 category_view = CategoryAPI.as_view('category_api')
 catalogApp.add_url_rule('/catalog/category/add/',
                         view_func=category_view, methods=['POST', ])
 catalogApp.add_url_rule('/catalog/category/<int:id>/',
                         view_func=category_view, methods=['GET', ])
-catalogApp.add_url_rule('/catalog/category/<int:id>/delete/',
+catalogApp.add_url_rule('/catalog/category/<int:id>/',
                         view_func=category_view, methods=['DELETE', ])
-catalogApp.add_url_rule('/catalog/category/<int:id>/edit/',
+catalogApp.add_url_rule('/catalog/category/<int:id>/',
                         view_func=category_view, methods=['PUT', ])
