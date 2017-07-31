@@ -2,7 +2,7 @@
 from app import db
 
 
-class Catagory(db.Model):
+class Category(db.Model):
     """sqlalchemy Category model."""
 
     __tablename__ = 'category'
@@ -37,6 +37,7 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), unique=True)
     link = db.Column(db.Text())
+    author = db.Column(db.Integer, db.ForeignKey('users.id'))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     parent = db.relationship("category", back_populates="children")
 
