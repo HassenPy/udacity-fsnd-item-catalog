@@ -20,15 +20,18 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(80))
     email = db.Column(db.String(120), unique=True)
     active = db.Column(db.Boolean)
+    admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, username=None, password=None,
-                 email=None, email1=None, active=True):
+                 email=None, email1=None, active=True,
+                 admin=False):
         """Class constructor."""
         self.username = username
         self.password = password
         self.email = email
         self.email1 = email1
-        self.is_active = active
+        self.active = active
+        self.admin = admin
         self.errors = {}
         self.validators = [
             self.validate_username,
@@ -114,10 +117,12 @@ class User(db.Model, UserMixin):
         return True
 
     def is_active(self):
-        """Return user state, method required by flask-login."""
-        if not self.active:
-            return False
-        return True
+        """Return user active state, method required by flask-login."""
+        return self.active
+
+    def is_admin(self):
+        """Return user admin state."""
+        return self.admin
 
     def get_id(self):
         """Fetch user id on login."""
