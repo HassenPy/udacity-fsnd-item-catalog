@@ -10,11 +10,16 @@ def main():
     print("Initiating engine...")
     app.db.create_all()
 
-    user = User(username="firstUser", password="muypassword12",
+    user = User(username="user", password="12345678",
                 email="h@gmail.com")
     user.make_password()
-
     app.db.session.add(user)
+    app.db.session.commit()
+
+    admin = User(username="admin", password="12345678",
+                 email="h1@gmail.com", admin=True)
+    admin.make_password()
+    app.db.session.add(admin)
     app.db.session.commit()
 
     category = Category(title="Computer stuff",
