@@ -1,5 +1,7 @@
 """Authentication views."""
-from flask import Blueprint, request, render_template, redirect
+from uuid import uuid4
+from flask import Blueprint, request, render_template, redirect, \
+                  session, jsonify
 from flask_login import login_user, login_required, logout_user
 
 from app import db, login_manager
@@ -87,3 +89,12 @@ def logout():
     """Logout and redirect to home page."""
     logout_user()
     return redirect('/')
+
+
+@authApp.route("/csrf-token", methods=['GET'])
+def get_csrf():
+    """Generate randomly unique csrf token for API POST requests."""
+    # from: http://flask.pocoo.org/snippets/3/
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = uuid4().hex
+    return jsonify({'_csrf_token': session['_csrf_token']})
