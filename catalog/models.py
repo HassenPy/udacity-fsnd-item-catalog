@@ -10,7 +10,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), unique=True)
     description = db.Column(db.Text())
-    items = db.relationship("item", back_populates="category")
+    items = db.relationship("Item", back_populates="Category")
 
     def __init__(self, title, description):
         """Class constructor."""
@@ -36,10 +36,10 @@ class Item(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(20), unique=True)
-    link = db.Column(db.Text())
-    author = db.Column(db.Integer, db.ForeignKey('users.id'))
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    parent = db.relationship("category", back_populates="children")
+    link = db.Column(db.String(20))
+    author = db.Column(db.Integer, db.ForeignKey('user.id'))
+    category = db.Column(db.Integer, db.ForeignKey('category.id'))
+    parent = db.relationship("Category", back_populates="Item")
 
     def __init__(self, title, link):
         """Class constructor."""
