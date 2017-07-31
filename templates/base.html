@@ -31,12 +31,12 @@
           <ul class="dropdown-menu">
             <li><a href="#" class="nav-link">Your profile</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Logout</a></li>
+            <li><a href="{{ url_for('authApp.logout') }}">Logout</a></li>
           </ul>
         </li>
       {% else %}
         <li class="nav-item">
-          <a href="#" class="nav-link">login</a>
+          <a href="{{ url_for('authApp.login') }}" class="nav-link">login</a>
         </li>
       {% endif %}
     </ul>
