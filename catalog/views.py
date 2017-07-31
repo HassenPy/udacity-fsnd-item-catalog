@@ -109,6 +109,43 @@ class CategoryAPI(MethodView):
             })
             return make_response(message, 404)
 
+    @login_required
+    @is_admin
+    def put(self, id):
+        """PUT method handler."""
+        title = request.form.get('title', '')
+        description = request.form.get('description', '')
+        if not (title or description):
+            message = jsonify({
+                'error': 'missing required parameters.'
+            })
+            return make_response(message, 400)
+        # Check if passed id is an integer
+        try:
+            category = Category.query.get(int(id))
+        except ValueError:
+            message = jsonify({
+                'error': 'id parameter must be an integer.'
+            })
+            return make_response(message, 400)
+
+        if category:
+            category.title = title
+            category.description = description
+            print(isinstance(category, Category))
+            if category.is_valid():
+                db.session.commit()
+                message = jsonify({
+                    "message": "Category successfully updated."
+                })
+                return make_response(message, 200)
+            return make_response(jsonify(category.errors), 400)
+        else:
+            message = jsonify({
+                "message": "Category doesn't exist."
+            })
+            return make_response(message, 404)
+
 
 category_view = CategoryAPI.as_view('category_api')
 catalogApp.add_url_rule('/catalog/category/add/',
