@@ -1,11 +1,13 @@
 """Catalog views."""
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, make_response
 from flask.views import MethodView
-# from flask_login import login_required
+from flask_login import login_required
+from sqlalchemy.exc import IntegrityError
 
-# from app import db
+from app import db
+from auth.utils import is_admin
 from .models import Category, Item
-from .serializers import PaginationSerializer
+from .serializers import CategorySerializer
 
 
 catalogApp = Blueprint('catalogApp', __name__)
@@ -16,21 +18,43 @@ class CategoryAPI(MethodView):
 
     def get(self, id):
         """GET Method handler."""
-        category = Category.query.get(id)
         offset = request.args.get('o', 1)
+
+        # Check if passed id is an integer
+        try:
+            category = Category.query.get(int(id))
+        except ValueError:
+            message = jsonify({
+                'error': 'id parameter must be an integer.'
+            })
+            return make_response(message, 400)
+        # check if passed offset is an integer
         try:
             offset = int(offset)
         except ValueError:
-            offset = 1
+            message = jsonify({
+                'error': 'offset parameter must be an integer.'
+            })
+            return make_response(message, 400)
 
         if category:
-            paginated_items = Item.query.paginate(offset, 3)
-            paginated_items = PaginationSerializer(paginated_items).serialize()
-            return jsonify(paginated_items)
+            # Fetch paginated category items
+            paginatetor = Item.query.filter_by(
+                category=id
+            ).paginate(offset, 3)
 
-        return jsonify({
+            # serialize category with items
+            category_serialized = CategorySerializer(
+                title=category.title,
+                description=category.description,
+                paginator=paginatetor
+            ).serialize()
+            return jsonify(category_serialized)
+
+        message = jsonify({
             'error': 'item not found.'
         })
+        return make_response(message, 404)
 
 
 category_view = CategoryAPI.as_view('category_api')
