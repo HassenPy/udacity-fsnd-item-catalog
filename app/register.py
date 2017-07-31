@@ -7,3 +7,9 @@ def register_apps(flasko):
     from catalog.views import catalogApp
     flasko.register_blueprint(authApp)
     flasko.register_blueprint(catalogApp)
+
+
+def register_middlewares(flasko):
+    """Import flask middlewares."""
+    from app import middlewares
+    flasko.jinja_env.globals['csrf_token'] = middlewares.generate_csrf_token
