@@ -1,6 +1,7 @@
 """sqlalchemy models that represent the authn/authz database."""
 # from sqlalchemy.orm import validates
 from flask_login import UserMixin
+from sqlalchemy.orm import reconstructor
 from argon2 import PasswordHasher, exceptions as argon2_exceptions
 from pyisemail import is_email
 
@@ -32,6 +33,17 @@ class User(db.Model, UserMixin):
         self.email1 = email1
         self.active = active
         self.admin = admin
+        self.errors = {}
+        self.validators = [
+            self.validate_username,
+            self.validate_password,
+            self.validate_email
+        ]
+
+    @reconstructor
+    def query_reconstructor(self):
+        """Reconstructor called when fetching query from db."""
+        # check: http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         self.errors = {}
         self.validators = [
             self.validate_username,

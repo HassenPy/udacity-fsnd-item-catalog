@@ -1,5 +1,7 @@
 """Catalog app models."""
 import bleach
+from sqlalchemy.orm import reconstructor
+
 from validators import url
 from validators.utils import ValidationFailure
 
@@ -19,14 +21,18 @@ class Category(db.Model):
     description = db.Column(db.Text())
 
     def __init__(self, title, description):
-        """Class constructor."""
+        """Class constructor called only when creating an object."""
         self.title = bleach.clean(title)
         self.description = bleach.clean(description)
         self.slug = slugify(self.title)
         self.errors = {}
-        self.validators = [
-            self.validate_title,
-        ]
+
+    @reconstructor
+    def query_reconstructor(self):
+        """Reconstructor called when fetching query from db."""
+        # check: http://docs.sqlalchemy.org/en/latest/orm/constructors.html
+        self.errors = {}
+        self.validators = [self.validate_title, ]
 
     def validate_title(self):
         """Title validator."""
@@ -76,6 +82,16 @@ class Item(db.Model):
         self.link = bleach.linkify(link)
         self.author = author
         self.category = category
+        self.errors = {}
+        self.validators = [
+            self.validate_title,
+            self.validate_link
+        ]
+
+    @reconstructor
+    def query_reconstructor(self):
+        """Reconstructor called when fetching query from db."""
+        # check: http://docs.sqlalchemy.org/en/latest/orm/constructors.html
         self.errors = {}
         self.validators = [
             self.validate_title,
