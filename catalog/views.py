@@ -56,6 +56,33 @@ class CategoryAPI(MethodView):
         })
         return make_response(message, 404)
 
+    @login_required
+    @is_admin
+    def post(self):
+        """GET Method handler."""
+        title = request.form.get('title', '')
+        description = request.form.get('description', '')
+        if not (title or description):
+            return make_response(jsonify({
+                'errors': 'missing required parameters'
+            }), 400)
+
+        category = Category(title=title, description=description)
+        if category.is_valid():
+            try:
+                db.session.add(category)
+                db.session.commit()
+                message = jsonify({
+                    "message": "category created successfully."
+                })
+                return make_response(message, 201)
+            except IntegrityError:
+                message = jsonify({
+                    "message": "Category already exists."
+                })
+                return make_response(message, 409)
+        return make_response(jsonify(category.errors), 400)
+
 
 category_view = CategoryAPI.as_view('category_api')
 catalogApp.add_url_rule('/catalog/category/add/',
