@@ -25,6 +25,7 @@ class Category(db.Model):
         self.title = bleach.clean(title)
         self.description = bleach.clean(description)
         self.slug = slugify(self.title)
+        self.validators = [self.validate_title, ]
         self.errors = {}
 
     @reconstructor
