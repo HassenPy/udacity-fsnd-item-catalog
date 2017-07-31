@@ -63,7 +63,7 @@ def login():
     if request.method == "POST":
         username = request.form['username']
         password = request.form['password']
-        if not (username or password):
+        if not (username and password):
             return render_template(
                 'login.html',
                 error="Please provide login credentials!"

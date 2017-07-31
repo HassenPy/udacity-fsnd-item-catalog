@@ -59,10 +59,10 @@ class CategoryAPI(MethodView):
     @login_required
     @is_admin
     def post(self):
-        """GET Method handler."""
+        """POST Method handler."""
         title = request.form.get('title', '')
         description = request.form.get('description', '')
-        if not (title or description):
+        if not (title and description):
             return make_response(jsonify({
                 'errors': 'missing required parameters'
             }), 400)
