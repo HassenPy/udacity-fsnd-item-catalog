@@ -22,11 +22,13 @@ class ItemSerializer(object):
         }
 
 
-class PaginationSerializer(object):
+class CategorySerializer(object):
     """Minimal paginator to dict serializer."""
 
-    def __init__(self, paginator):
+    def __init__(self, title, description, paginator):
         """PaginationSerializer constructor."""
+        self.title = title
+        self.description = description
         self.items = []
         for item in paginator.items:
             self.items.append(ItemSerializer(item).serialize())
@@ -37,6 +39,8 @@ class PaginationSerializer(object):
     def serialize(self):
         """Return dict representation of paginator."""
         return {
+            'title': self.title,
+            'description': self.description,
             'items': self.items,
             'page': self.page,
             'next_page': self.next_page,
