@@ -67,6 +67,11 @@ def login():
                 error="Please provide login credentials!"
             )
         user = User.query.filter_by(username=username).first()
+        if not user:
+            return render_template(
+                'login.html',
+                error="Unvalid login credentials!"
+            )
         try:
             user.verify_password(password)
             login_user(user)
