@@ -39,10 +39,12 @@ class Item(db.Model):
     author = db.Column(db.Integer, db.ForeignKey('user.id'))
     category = db.Column(db.Integer, db.ForeignKey('category.id'))
 
-    def __init__(self, title, link):
+    def __init__(self, title, link, author, category):
         """Class constructor."""
         self.title = title
         self.link = link
+        self.author = author
+        self.category = category
         self.errors = {}
         self.validators = [
         ]
