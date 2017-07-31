@@ -6,15 +6,39 @@ class ItemSerializer(object):
     """Minimal object to dict serializer."""
 
     def __init__(self, item):
+        """ItemSerializer constructor."""
         self.title = item.title
         self.link = item.link
         self.author = item.author
         self.category = item.category
 
     def serialize(self):
+        """Return dict representation of Item."""
         return {
             'title': self.title,
             'link': self.link,
             'author': self.author,
             'category': self.category
+        }
+
+
+class PaginationSerializer(object):
+    """Minimal paginator to dict serializer."""
+
+    def __init__(self, paginator):
+        """PaginationSerializer constructor."""
+        self.items = []
+        for item in paginator.items:
+            self.items.append(ItemSerializer(item).serialize())
+        self.page = paginator.page
+        self.next_page = paginator.next_num
+        self.prev_page = paginator.prev_num
+
+    def serialize(self):
+        """Return dict representation of paginator."""
+        return {
+            'items': self.items,
+            'page': self.page,
+            'next_page': self.next_page,
+            'prev_page': self.prev_page
         }
