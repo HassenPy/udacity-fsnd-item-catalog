@@ -1,6 +1,8 @@
 """User authentication utility functions."""
 from functools import wraps
-from flask import session, redirect, url_for
+from flask import session, redirect, url_for, abort
+
+from .models import User
 
 
 def logout_required(f):
@@ -15,3 +17,18 @@ def logout_required(f):
         print("seems fine!")
         return f(*args, **kwargs)
     return decorated_function
+
+
+def is_admin(f):
+    """Check user permissions."""
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        user_id = session.get('user_id', False)
+        print('checking admin state')
+        if user_id:
+            is_admin = User.query.get(user_id).is_admin()
+            if not is_admin:
+                print('Not admin bruh :/')
+                abort(401)
+        return f(*args, **kwargs)
+    return wrapper
