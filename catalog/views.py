@@ -1,10 +1,11 @@
 """Catalog views."""
-from flask import Blueprint, jsonify, request, make_response
+from flask import Blueprint, jsonify, request, make_response, session
 from flask.views import MethodView
 from flask_login import login_required
 from sqlalchemy.exc import IntegrityError
 
 from app import db
+from auth.models import User
 from auth.utils import is_admin
 
 from .models import Category, Item
@@ -70,7 +71,6 @@ class CategoryAPI(MethodView):
             }), 400)
 
         category = Category(title=title, description=description)
-        print(category)
         if category.is_valid():
             try:
                 db.session.add(category)
@@ -154,6 +154,97 @@ class ItemAPI(MethodView):
             'error': 'resource not found.'
         })
         return make_response(message, 404)
+
+    @login_required
+    def post(self):
+        """POST Method handler."""
+        # Check if required fields exist in POST values.
+        title = request.form.get('title', '')
+        link = request.form.get('link', '')
+        category = request.form.get('category', '')
+        if not (title and link and category):
+            return make_response(jsonify({
+                'errors': 'missing required parameter'
+            }), 400)
+
+        item = Item(title=title, link=link,
+                    category=category, author=session['user_id'])
+        if item.is_valid():
+            try:
+                db.session.add(item)
+                db.session.commit()
+                message = jsonify({
+                    "message": "resource created."
+                })
+                return make_response(message, 201)
+            except IntegrityError:
+                message = jsonify({
+                    "message": "resouce already exists."
+                })
+                return make_response(message, 409)
+        return make_response(jsonify(item.errors), 400)
+
+    @login_required
+    def delete(self, id):
+        """DELETE method handler."""
+        item = Item.query.get(int(id))
+        user = User.query.get(session['user_id'])
+
+        if item:
+            if (user.id != item.author) and (not user.is_admin()):
+                message = jsonify({
+                    "message": "unauthorized action."
+                })
+                return make_response(message, 401)
+
+            db.session.delete(item)
+            db.session.commit()
+            message = jsonify({
+                "message": "resource deleted."
+            })
+            return make_response(message, 200)
+        else:
+            message = jsonify({
+                'error': 'resource not found.'
+            })
+            return make_response(message, 404)
+
+    @login_required
+    def put(self, id):
+        """PUT method handler."""
+        item = Item.query.get(int(id))
+        user = User.query.get(session['user_id'])
+        if (user.id != item.author) and (not user.is_admin()):
+            message = jsonify({
+                "message": "unauthorized action."
+            })
+            return make_response(message, 401)
+
+        title = request.form.get('title', '')
+        link = request.form.get('link', '')
+        category = request.form.get('category', '')
+        if not (title or link or category):
+            message = jsonify({
+                'error': 'missing required parameter.'
+            })
+            return make_response(message, 400)
+
+        if item:
+            item.title = title or item.title
+            item.link = link or item.link
+            item.category = category or item.category
+            if item.is_valid():
+                db.session.commit()
+                message = jsonify({
+                    "message": "resource updated."
+                })
+                return make_response(message, 200)
+            return make_response(jsonify(category.errors), 400)
+        else:
+            message = jsonify({
+                "message": "resource doesn't exist."
+            })
+            return make_response(message, 404)
 
 
 category_view = CategoryAPI.as_view('category_api')
