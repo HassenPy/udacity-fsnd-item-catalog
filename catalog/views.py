@@ -6,9 +6,9 @@ from sqlalchemy.exc import IntegrityError
 
 from app import db
 from auth.utils import is_admin
+
 from .models import Category, Item
 from .serializers import CategoryPageSerializer, CategoryListSerializer
-
 
 catalogApp = Blueprint('catalogApp', __name__)
 
@@ -24,17 +24,9 @@ class CategoryAPI(MethodView):
             serialized = CategoryListSerializer(categories).serialize()
             return jsonify(serialized)
 
-        # get the offset GET parameter.
+        # get the pagination offset GET parameter.
         offset = request.args.get('o', 1)
-
-        # Check if passed id is an integer
-        try:
-            category = Category.query.get(int(id))
-        except ValueError:
-            message = jsonify({
-                'error': 'resource not found.'
-            })
-            return make_response(message, 404)
+        category = Category.query.get(int(id))
 
         # check if passed offset is an integer
         try:
@@ -97,15 +89,7 @@ class CategoryAPI(MethodView):
     @is_admin
     def delete(self, id):
         """DELETE method handler."""
-        # Check if passed id is an integer
-        try:
-            category = Category.query.get(int(id))
-        except ValueError:
-            message = jsonify({
-                'error': 'resource not found.'
-            })
-            return make_response(message, 404)
-
+        category = Category.query.get(int(id))
         if category:
             db.session.delete(category)
             db.session.commit()
@@ -130,15 +114,8 @@ class CategoryAPI(MethodView):
                 'error': 'missing required parameter.'
             })
             return make_response(message, 400)
-        # Check if passed id is an integer
-        try:
-            category = Category.query.get(int(id))
-        except ValueError:
-            message = jsonify({
-                'error': 'resource not found.'
-            })
-            return make_response(message, 404)
 
+        category = Category.query.get(int(id))
         if category:
             category.title = title
             category.description = description
