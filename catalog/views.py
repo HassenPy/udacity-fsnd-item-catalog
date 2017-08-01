@@ -8,7 +8,8 @@ from app import db
 from auth.utils import is_admin
 
 from .models import Category, Item
-from .serializers import CategoryPageSerializer, CategoryListSerializer
+from .serializers import CategoryPageSerializer, CategoryListSerializer, \
+                         ItemSerializer, ItemListSerializer
 
 catalogApp = Blueprint('catalogApp', __name__)
 
@@ -133,6 +134,28 @@ class CategoryAPI(MethodView):
             return make_response(message, 404)
 
 
+class ItemAPI(MethodView):
+    """MethodView that handles all the Item API methods."""
+
+    def get(self, id=None):
+        """GET Method handler."""
+        # If not providing id, return all categories.
+        if not id:
+            items = db.session.query(Item).order_by(Item.created).all()
+            serialized = ItemListSerializer(items).serialize()
+            return jsonify(serialized)
+
+        item = Item.query.get(int(id))
+        if item:
+            serialized = ItemSerializer(item).serialize()
+            return jsonify(serialized)
+
+        message = jsonify({
+            'error': 'resource not found.'
+        })
+        return make_response(message, 404)
+
+
 category_view = CategoryAPI.as_view('category_api')
 catalogApp.add_url_rule('/catalog/category/',
                         view_func=category_view, methods=['GET', ])
@@ -144,3 +167,15 @@ catalogApp.add_url_rule('/catalog/category/<int:id>/',
                         view_func=category_view, methods=['DELETE', ])
 catalogApp.add_url_rule('/catalog/category/<int:id>/',
                         view_func=category_view, methods=['PUT', ])
+
+item_view = ItemAPI.as_view('item_api')
+catalogApp.add_url_rule('/catalog/item/',
+                        view_func=item_view, methods=['GET', ])
+catalogApp.add_url_rule('/catalog/item/<int:id>/',
+                        view_func=item_view, methods=['GET', ])
+catalogApp.add_url_rule('/catalog/item/',
+                        view_func=item_view, methods=['POST', ])
+catalogApp.add_url_rule('/catalog/item/<int:id>/',
+                        view_func=item_view, methods=['DELETE', ])
+catalogApp.add_url_rule('/catalog/item/<int:id>/',
+                        view_func=item_view, methods=['PUT', ])
