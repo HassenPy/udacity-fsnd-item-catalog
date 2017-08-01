@@ -77,7 +77,7 @@ class Item(db.Model):
     author = db.Column(db.Integer, db.ForeignKey('user.id'))
     category = db.Column(db.Integer, db.ForeignKey('category.id'))
     created = db.Column(db.DateTime)
-    edited = db.Column(db.DateTime)
+    edited = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
     def __init__(self, title, link, author, category,
                  created=None, edited=None):
