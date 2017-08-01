@@ -9,12 +9,9 @@ def logout_required(f):
     """Redirects if user accesses a page when logged in."""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        print("Checking privilege!")
         logged_in = session.get('user_id', False)
         if logged_in:
-            print("Gonna redirect!")
             return redirect(url_for('authApp.home'))
-        print("seems fine!")
         return f(*args, **kwargs)
     return decorated_function
 
@@ -24,11 +21,9 @@ def is_admin(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         user_id = session.get('user_id', False)
-        print('checking admin state')
         if user_id:
             is_admin = User.query.get(user_id).is_admin()
             if not is_admin:
-                print('Not admin bruh :/')
                 abort(401)
         return f(*args, **kwargs)
     return wrapper
