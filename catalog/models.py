@@ -83,7 +83,7 @@ class Item(db.Model):
                  created=None, edited=None):
         """Class constructor."""
         self.title = bleach.clean(title)
-        self.link = bleach.linkify(link)
+        self.link = bleach.clean(link)
         self.author = author
         self.category = category
         if not created:
@@ -128,8 +128,7 @@ class Item(db.Model):
         # kind of weird way of raising a validation error.
         if isinstance(url(field, public=True), ValidationFailure):
             errors.append(
-                    "Title must be longer than 5 and "
-                    "shorter than 25 characters"
+                    "invalid link."
             )
 
         if errors:
