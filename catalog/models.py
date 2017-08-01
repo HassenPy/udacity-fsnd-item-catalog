@@ -1,11 +1,11 @@
 """Catalog app models."""
 import bleach
+from slugify import slugify
+from datetime import datetime
 from sqlalchemy.orm import reconstructor
 
 from validators import url
 from validators.utils import ValidationFailure
-
-from slugify import slugify
 
 from app import db
 
@@ -76,13 +76,20 @@ class Item(db.Model):
     link = db.Column(db.String(1000))
     author = db.Column(db.Integer, db.ForeignKey('user.id'))
     category = db.Column(db.Integer, db.ForeignKey('category.id'))
+    created = db.Column(db.DateTime)
+    edited = db.Column(db.DateTime)
 
-    def __init__(self, title, link, author, category):
+    def __init__(self, title, link, author, category,
+                 created=None, edited=None):
         """Class constructor."""
         self.title = bleach.clean(title)
         self.link = bleach.linkify(link)
         self.author = author
         self.category = category
+        if not created:
+            self.created = datetime.utcnow()
+        if not edited:
+            self.edited = datetime.utcnow()
         self.errors = {}
         self.validators = [
             self.validate_title,
