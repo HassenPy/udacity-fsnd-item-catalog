@@ -2,26 +2,6 @@
 from app.settings import Config
 
 
-class ItemSerializer(object):
-    """Minimal object to dict serializer."""
-
-    def __init__(self, item):
-        """ItemSerializer constructor."""
-        self.title = item.title
-        self.link = item.link
-        self.author = item.author
-        self.category = item.category
-
-    def serialize(self):
-        """Return dict representation of Item."""
-        return {
-            'title': self.title,
-            'link': self.link,
-            'author': self.author,
-            'category': self.category
-        }
-
-
 class CategoryPageSerializer(object):
     """Minimal paginator to dict serializer."""
 
@@ -64,5 +44,41 @@ class CategoryListSerializer(object):
                 'location': '%s/catalog/category/%d' %
                                         (Config.domain, category.id)
             })
-        print(categories_serialized)
         return categories_serialized
+
+
+class ItemListSerializer(object):
+    """Item object list to dict serializer."""
+
+    def __init__(self, items):
+        """ItemListSerializer constructor."""
+        self.items = items
+
+    def serialize(self):
+        """Return dict representation of Items."""
+        serialized = []
+        for item in self.items:
+            serialized.append({
+                'title': item.title,
+                'location': '%s/catalog/item/%d' %
+                            (Config.domain, item.id)
+            })
+        return serialized
+
+
+class ItemSerializer(object):
+    """Item object to dict serializer."""
+
+    def __init__(self, item):
+        """ItemSerializer constructor."""
+        self.item = item
+
+    def serialize(self):
+        """Return dict representation of Item."""
+        return {
+            'title': self.item.title,
+            'link': self.item.link,
+            'created': self.item.created,
+            'edited': self.item.edited,
+            'author': '%s/user/%d' % (Config.domain, self.item.author,)
+        }
