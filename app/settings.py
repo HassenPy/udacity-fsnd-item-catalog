@@ -14,7 +14,18 @@ class Config(object):
                                    'templates')
     static_folder = os.path.join(os.path.dirname(base_dir),
                                  'static')
-    apps = [
-        'auth',
-    ]
+    domain = "http://127.0.0.1:5000"
+
+
+class TestConfig(object):
+    """Base flask config."""
+
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///../test.db'
+    SECRET_KEY = 'd7af2b93103e488dbc55a08b7eca6176'
+    DEBUG = True
+    TESTING = True
+    template_folder = os.path.join(os.path.dirname(base_dir),
+                                   'templates')
+    static_folder = os.path.join(os.path.dirname(base_dir),
+                                 'static')
     domain = "http://127.0.0.1:5000"
