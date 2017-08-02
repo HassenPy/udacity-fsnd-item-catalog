@@ -1,4 +1,4 @@
-sqlite.db
+*.db
 myenv/
 __pycache__/
 *.pyc
