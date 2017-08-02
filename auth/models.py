@@ -58,7 +58,7 @@ class User(db.Model, UserMixin):
 
         if not str.isalnum(field):
             errors.append(
-                    "username is not alphanumeric."
+                    "username must only use alphanumerics."
             )
         if not (len(field) in range(3, 13)):
             errors.append(

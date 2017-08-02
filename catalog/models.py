@@ -3,7 +3,6 @@ import bleach
 from slugify import slugify
 from datetime import datetime
 from sqlalchemy.orm import reconstructor
-
 from validators import url
 from validators.utils import ValidationFailure
 
