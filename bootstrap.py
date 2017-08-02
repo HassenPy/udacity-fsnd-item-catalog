@@ -1,57 +1,59 @@
 """Bootstrap script to initialize the app."""
-import app
+from app import create_app
 
 from auth.models import User
 from catalog.models import Category, Item
 
 
-def main():
+def bootstrap(app, db):
     """Bootstrap script, run once before app usage."""
-    print("Initiating engine...")
-    app.db.create_all()
+    app.app_context().push()
 
+    print("Initiating engine...")
+    db.create_all()
     user = User(username="user", password="12345678",
                 email="h@gmail.com")
     user.make_password()
-    app.db.session.add(user)
-    app.db.session.commit()
+    db.session.add(user)
+    db.session.commit()
 
     admin = User(username="admin", password="12345678",
                  email="h1@gmail.com", admin=True)
     admin.make_password()
-    app.db.session.add(admin)
-    app.db.session.commit()
+    db.session.add(admin)
+    db.session.commit()
 
     category = Category(title="Computer stuff",
                         description="Add stuff about computers here")
 
-    app.db.session.add(category)
-    app.db.session.commit()
+    db.session.add(category)
+    db.session.commit()
 
-    item = Item(title="click me1", link="http://www.google.com",
-                author=1, category=1)
-    app.db.session.add(item)
-    item1 = Item(title="click me2", link="http://www.google.com",
+    item = Item(title="admin item", link="http://www.google.com",
+                author=2, category=1)
+    db.session.add(item)
+    item1 = Item(title="user item", link="https://www.youtube.com",
                  author=1, category=1)
-    app.db.session.add(item1)
-    item2 = Item(title="click me3", link="http://www.google.com",
+    db.session.add(item1)
+    item2 = Item(title="facebook", link="https://www.facebook.com",
+                 author=2, category=1)
+    db.session.add(item2)
+    item3 = Item(title="twitter", link="https://www.twitter.com",
                  author=1, category=1)
-    app.db.session.add(item2)
-    item3 = Item(title="click me4", link="http://www.google.com",
+    db.session.add(item3)
+    item4 = Item(title="reddit", link="https://www.reddit.com",
+                 author=2, category=1)
+    db.session.add(item4)
+    item5 = Item(title="gmail", link="https://www.gmail.com",
                  author=1, category=1)
-    app.db.session.add(item3)
-    item4 = Item(title="click me5", link="http://www.google.com",
-                 author=1, category=1)
-    app.db.session.add(item4)
-    item5 = Item(title="click me6", link="http://www.google.com",
-                 author=1, category=1)
-    app.db.session.add(item5)
-    item6 = Item(title="click me7", link="http://www.google.com",
-                 author=1, category=1)
-    app.db.session.add(item6)
+    db.session.add(item5)
+    item6 = Item(title="vimeo", link="https://www.vimeo.com",
+                 author=2, category=1)
+    db.session.add(item6)
 
-    app.db.session.commit()
+    db.session.commit()
 
 
 if __name__ == "__main__":
-    main()
+    app, db = create_app()
+    bootstrap(app, db)
