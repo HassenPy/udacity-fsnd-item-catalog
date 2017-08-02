@@ -4,18 +4,10 @@ from flask import Blueprint, request, render_template, redirect, \
                   session, jsonify
 from flask_login import login_user, login_required, logout_user
 
-from app import db, login_manager
-
-from .models import User
+from .models import User, db
 from .utils import logout_required
 
 authApp = Blueprint('authApp', __name__)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    """Tell flask-login what query to use to get the user with his id."""
-    return User.query.get(user_id)
 
 
 @authApp.route('/', methods=['GET'])
