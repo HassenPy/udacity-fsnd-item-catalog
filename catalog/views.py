@@ -129,7 +129,7 @@ class CategoryAPI(MethodView):
             return make_response(jsonify(category.errors), 400)
         else:
             message = jsonify({
-                "message": "resource doesn't exist."
+                "message": "resource not found."
             })
             return make_response(message, 404)
 
@@ -214,6 +214,12 @@ class ItemAPI(MethodView):
         """PUT method handler."""
         item = Item.query.get(int(id))
         user = User.query.get(session['user_id'])
+        if not item:
+            message = jsonify({
+                "message": "resource not found."
+            })
+            return make_response(message, 404)
+
         if (user.id != item.author) and (not user.is_admin()):
             message = jsonify({
                 "message": "unauthorized action."
@@ -229,22 +235,16 @@ class ItemAPI(MethodView):
             })
             return make_response(message, 400)
 
-        if item:
-            item.title = title or item.title
-            item.link = link or item.link
-            item.category = category or item.category
-            if item.is_valid():
-                db.session.commit()
-                message = jsonify({
-                    "message": "resource updated."
-                })
-                return make_response(message, 200)
-            return make_response(jsonify(category.errors), 400)
-        else:
+        item.title = title or item.title
+        item.link = link or item.link
+        item.category = category or item.category
+        if item.is_valid():
+            db.session.commit()
             message = jsonify({
-                "message": "resource doesn't exist."
+                "message": "resource updated."
             })
-            return make_response(message, 404)
+            return make_response(message, 200)
+        return make_response(jsonify(category.errors), 400)
 
 
 category_view = CategoryAPI.as_view('category_api')
