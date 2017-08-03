@@ -108,16 +108,16 @@ class CategoryAPI(MethodView):
     @is_admin
     def put(self, id):
         """PUT method handler."""
-        title = request.form.get('title', '')
-        description = request.form.get('description', '')
-        if not (title or description):
-            message = jsonify({
-                'error': 'missing required parameter.'
-            })
-            return make_response(message, 400)
-
         category = Category.query.get(int(id))
         if category:
+            title = request.form.get('title', '')
+            description = request.form.get('description', '')
+            if not (title or description):
+                message = jsonify({
+                    'error': 'missing required parameter.'
+                })
+                return make_response(message, 400)
+
             category.title = title
             category.description = description
             if category.is_valid():
