@@ -29,7 +29,7 @@ def bootstrap(app, db):
     db.session.commit()
 
     category = Category(title="Life hacks",
-                    description="Add life hack links here")
+                        description="Add life hack links here")
     db.session.add(category)
     db.session.commit()
 
