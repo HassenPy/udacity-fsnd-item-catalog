@@ -71,7 +71,7 @@ class Item(db.Model):
     __tablename__ = 'item'
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(35), unique=True)
+    title = db.Column(db.String(70), unique=True)
     link = db.Column(db.String(1000))
     author = db.Column(db.Integer, db.ForeignKey('user.id'))
     category = db.Column(db.Integer, db.ForeignKey('category.id'))
@@ -110,10 +110,10 @@ class Item(db.Model):
         field = self.title
         errors = []
 
-        if not (len(field) in range(5, 25)):
+        if not (len(field) in range(5, 70)):
             errors.append(
                     "Title must be longer than 5 and "
-                    "shorter than 25 characters"
+                    "shorter than 70 characters"
             )
 
         if errors:
