@@ -81,6 +81,24 @@ class authTest(unittest.TestCase):
             })
             assert(b"Unvalid credentials." in response.data)
 
+    def test_unauthenticated_logout(self):
+        """Unauthenticated user logout test."""
+        response = self.app.get("/logout")
+        assert(response.status_code == 401)
+
+    def test_authenticated_logout(self):
+        """Authenticated user logout test."""
+        with self.app as c:
+            token = c.get('/csrf-token')
+            token = json.loads(token.data.decode())['_csrf_token']
+            response = c.post('/login', data={
+                'username': 'user',
+                'password': '12345678',
+                '_csrf_token': token
+            })
+            response = self.app.get("/logout")
+            assert(response.status_code == 302)
+
     def test_unauthenticated_signup_page_render(self):
         """Signup page unauthenticated user page display test."""
         response = self.app.get("/signup")
@@ -136,7 +154,6 @@ class authTest(unittest.TestCase):
                 'emailConfirm': 'hassenbtn@gmail.com',
                 '_csrf_token': token
             })
-            print(response.data)
             assert(b"username must only use alphanumerics." in response.data)
             assert((b"username must be longer than 3 and " +
                    b"shorter than 12 characters") in response.data)
