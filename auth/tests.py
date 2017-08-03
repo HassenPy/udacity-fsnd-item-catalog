@@ -87,15 +87,16 @@ class authTest(unittest.TestCase):
         assert(response.status_code == 200)
 
     def test_authenticated_signup_page_redirect(self):
-        """Signup page authenticated user page redirect test."""
+        """Signup page redirects authenticated user."""
         with self.app as c:
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/login', data={
+            c.post('/login', data={
                 'username': 'user',
                 'password': '12345678',
                 '_csrf_token': token
             })
+            response = c.get('/signup')
             assert(response.status_code == 302)
 
     def test_signup_form_csrf_protection(self):
