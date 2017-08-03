@@ -8,14 +8,10 @@
   <div class="form-header col-xs-12">
       <h2>Join the pickies</h2>
       <div class="social">
-        <a href="#" class="fb">
-          <i class="icon-facebook"></i>
-        </a>
-
-        <a href="#" class="gp">
-          <i class="icon-gplus"></i>
-        </a>
+        <fb:login-button scope="public_profile,email" onlogin="sendToken();">
+        </fb:login-button>
       </div>
+      <div class="col-xs-12 text-error" id="status"></div>
       <div class="separator col-xs-12">
         <hr class="pull-left">
         <p class="col-xs-12"> or signup manually </p>
@@ -60,4 +56,44 @@
   <input type="submit" value="signup" class="submit">
 </form>
 
+{% endblock %}
+
+{% block footer_scripts %}
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1380611928713155',
+      cookie     : true,  // enable cookies to allow the server to access
+                          // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8' // use graph api version 2.8
+    });
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  function sendToken() {
+    var access_token = FB.getAuthResponse()['accessToken'];
+    console.log('Welcome!  Fetching your access token.... ');
+    console.log(access_token);
+    var response;
+    FB.api('/me', function(response) {
+      csrf_token = $('input[name=_csrf_token]')[0].value;
+      $.post('/fbsignup', {
+          'access_token': access_token,
+          '_csrf_token': csrf_token
+      }).fail(function(response){
+        data = JSON.parse(response.responseText);
+        $("#status").text(data.message);
+      });
+    });
+  }
+</script>
 {% endblock %}

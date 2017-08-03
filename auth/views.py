@@ -1,13 +1,69 @@
 """Authentication views."""
+import requests
 from uuid import uuid4
 from flask import Blueprint, request, render_template, redirect, \
-                  session, jsonify
+                  session, jsonify, make_response
 from flask_login import login_user, login_required, logout_user
 
+from app.settings import Config
 from .models import User, db
 from .utils import logout_required
 
 authApp = Blueprint('authApp', __name__)
+
+
+def get_fb_user(access_token):
+    """Get user access_token and fetch user data."""
+    app_id = Config.fb_app_id
+    app_secret = Config.fb_app_secret
+    url = ("https://graph.facebook.com/oauth/access_token?"
+           "grant_type=fb_exchange_token&client_id=%s&client_secret=%s"
+           "&fb_exchange_token=%s" % (app_id, app_secret, access_token))
+    token = requests.get(url).json()
+    url = ('https://graph.facebook.com/v2.10/me/'
+           '?access_token=%s&fields=name,id,email' % token['access_token'])
+    response = requests.get(url).json()
+    return response
+
+
+@authApp.route('/fbsignup', methods=['POST'])
+def fbsignup():
+    """Endpoint to signup using facebook."""
+    access_token = request.form['access_token']
+    fb_user = get_fb_user(access_token)
+    user = User.query.filter_by(fb_id=fb_user['id']).first()
+    if user:
+        return make_response(jsonify({
+            "message": "An account associated with this facebook "
+                       "account already exists."
+        }), 409)
+    else:
+        user = User(
+            username=fb_user['name'],
+            email=fb_user['email'],
+            fb_id=fb_user['id']
+        )
+        db.session.add(user)
+        db.session.commit()
+        return signup_success()
+    return jsonify({"message": "good"})
+
+
+@authApp.route('/fblogin', methods=['POST'])
+def fblogin():
+    """Endpoint to login using facebook."""
+    access_token = request.form['access_token']
+    fb_user_id = get_fb_user(access_token)['id']
+    user = User.query.filter_by(fb_id=fb_user_id).first()
+    if user:
+        login_user(user)
+        return redirect('/')
+    else:
+        return make_response(jsonify({
+            "message": "No account associated with this "
+                       "facebook account exists"
+        }), 404)
+    return jsonify({"message": "good"})
 
 
 @authApp.route('/', methods=['GET'])
