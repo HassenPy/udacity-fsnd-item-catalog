@@ -33,4 +33,4 @@ class TestConfig(object):
                                    'templates')
     static_folder = os.path.join(os.path.dirname(base_dir),
                                  'static')
-    domain = "http://127.0.0.1:5000"
+    domain = "http://localhost:5000"
