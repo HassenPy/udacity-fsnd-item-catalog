@@ -41,7 +41,7 @@ class CategoryListSerializer(object):
         for category in self.categories:
             categories_serialized.append({
                 'title': category.title,
-                'location': '%s/catalog/category/%d' %
+                'location': '%s/catalog/category/%d/' %
                                         (Config.domain, category.id)
             })
         return categories_serialized
@@ -60,7 +60,7 @@ class ItemListSerializer(object):
         for item in self.items:
             serialized.append({
                 'title': item.title,
-                'location': '%s/catalog/item/%d' %
+                'location': '%s/catalog/item/%d/' %
                             (Config.domain, item.id)
             })
         return serialized
@@ -80,5 +80,7 @@ class ItemSerializer(object):
             'link': self.item.link,
             'created': self.item.created,
             'edited': self.item.edited,
-            'author': '%s/user/%d' % (Config.domain, self.item.author,)
+            'author': '%s/user/%d' % (Config.domain, self.item.author,),
+            'location': '%s/catalog/item/%d/' %
+                        (Config.domain, self.item.id)
         }
