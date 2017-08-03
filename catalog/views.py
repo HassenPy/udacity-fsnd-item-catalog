@@ -244,7 +244,7 @@ class ItemAPI(MethodView):
                 "message": "resource updated."
             })
             return make_response(message, 200)
-        return make_response(jsonify(category.errors), 400)
+        return make_response(jsonify(item.errors), 400)
 
 
 category_view = CategoryAPI.as_view('category_api')
