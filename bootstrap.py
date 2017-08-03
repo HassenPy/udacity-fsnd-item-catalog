@@ -25,7 +25,11 @@ def bootstrap(app, db):
 
     category = Category(title="Computer stuff",
                         description="Add stuff about computers here")
+    db.session.add(category)
+    db.session.commit()
 
+    category = Category(title="Life hacks",
+                    description="Add life hack links here")
     db.session.add(category)
     db.session.commit()
 
@@ -36,10 +40,10 @@ def bootstrap(app, db):
                  author=1, category=1)
     db.session.add(item1)
     item2 = Item(title="facebook", link="https://www.facebook.com",
-                 author=2, category=1)
+                 author=2, category=2)
     db.session.add(item2)
     item3 = Item(title="twitter", link="https://www.twitter.com",
-                 author=1, category=1)
+                 author=1, category=2)
     db.session.add(item3)
     item4 = Item(title="reddit", link="https://www.reddit.com",
                  author=2, category=1)
