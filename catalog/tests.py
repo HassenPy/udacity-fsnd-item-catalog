@@ -38,8 +38,8 @@ class authTest(unittest.TestCase):
         # use bootstrap script data
         assert(b"Life hacks" in response.data)
         # check for category items
-        assert(b"facebook" in response.data)
-        assert(b"twitter" in response.data)
+        assert(b"http://localhost:5000/catalog/item/4/" in response.data)
+        assert(b"http://localhost:5000/catalog/item/5/" in response.data)
         assert(response.status_code == 200)
 
     def test_category_post_csrf_protection(self):
@@ -205,16 +205,16 @@ class authTest(unittest.TestCase):
         """Check if endpoint returns a list of item when no id provided."""
         response = self.app.get("/catalog/item/")
         # use bootstrap script data
-        assert(b"admin item" in response.data)
-        assert(b"user item" in response.data)
+        assert(b"http://localhost:5000/catalog/item/1/" in response.data)
+        assert(b"http://localhost:5000/catalog/item/2/" in response.data)
         assert(response.status_code == 200)
 
     def test_item_with_id(self):
         """Check if endpoint returns the right item."""
         response = self.app.get("/catalog/item/2/")
         # use bootstrap script data
-        assert(b"user item" in response.data)
-        assert(b"https://www.youtube.com" in response.data)
+        assert(b"Testing Flask Apps, Something that is untested is broken"
+               in response.data)
         assert(response.status_code == 200)
 
     def test_item_post_csrf_protection(self):
@@ -265,7 +265,7 @@ class authTest(unittest.TestCase):
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
             response = c.post('/catalog/item/', data={
-                'title': 'admin item',
+                'title': 'Flask Application Factories',
                 'link': 'http://www.google.com',
                 'category': 1,
                 '_csrf_token': token
