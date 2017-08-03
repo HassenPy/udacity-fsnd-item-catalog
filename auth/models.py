@@ -20,17 +20,18 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(12), unique=True)
     password = db.Column(db.String(80))
     email = db.Column(db.String(120), unique=True)
+    fb_id = db.Column(db.String(200), unique=True)
     active = db.Column(db.Boolean)
     admin = db.Column(db.Boolean, default=False)
 
-    def __init__(self, username=None, password=None,
-                 email=None, email1=None, active=True,
-                 admin=False):
+    def __init__(self, username=None, password=None, email=None,
+                 email1=None, fb_id=None, active=True, admin=False):
         """Class constructor."""
         self.username = username
         self.password = password
         self.email = email
         self.email1 = email1
+        self.fb_id = fb_id
         self.active = active
         self.admin = admin
         self.errors = {}
