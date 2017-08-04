@@ -25,6 +25,16 @@ def home():
     )
 
 
+@catalogApp.route('/category/', methods=['GET'])
+def category_list():
+    """GET Method handler."""
+    categories = category_api.get().data.decode('utf-8')
+    return render_template(
+        'categoryList.html',
+        categories=json.loads(categories),
+    )
+
+
 @catalogApp.route('/category/<int:id>/', methods=['GET'])
 def category_page(id):
     """GET Method handler."""
@@ -37,13 +47,15 @@ def category_page(id):
     )
 
 
-@catalogApp.route('/category/', methods=['GET'])
-def category_list():
+@login_required
+@catalogApp.route('/profile/', methods=['GET'])
+def user_profile():
     """GET Method handler."""
-    categories = category_api.get().data.decode('utf-8')
+    user_id = session['user_id']
+    items = Item.query.filter_by(author=user_id).all()
     return render_template(
-        'categoryList.html',
-        categories=json.loads(categories),
+        'profile.html',
+        items=items
     )
 
 
@@ -105,16 +117,4 @@ def item_edit(id):
         item=item,
         error=None,
         errors=None
-    )
-
-
-@login_required
-@catalogApp.route('/profile/', methods=['GET'])
-def user_profile():
-    """GET Method handler."""
-    user_id = session['user_id']
-    items = Item.query.filter_by(author=user_id).all()
-    return render_template(
-        'profile.html',
-        items=items
     )
