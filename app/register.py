@@ -5,9 +5,13 @@ from flask import request, session, abort
 def register_apps(flasko):
     """Subscribe apps to the flask instance."""
     from auth.views import authApp
+    from auth.api import authAPI
     from catalog.views import catalogApp
+    from catalog.api import catalogAPI
     flasko.register_blueprint(authApp)
+    flasko.register_blueprint(authAPI)
     flasko.register_blueprint(catalogApp)
+    flasko.register_blueprint(catalogAPI)
 
 
 def register_user_loader(login_manager):
