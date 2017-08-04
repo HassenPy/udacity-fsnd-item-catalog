@@ -1,29 +1,13 @@
 """Authentication views."""
-import requests
 from uuid import uuid4
 from flask import Blueprint, request, render_template, redirect, \
                   session, jsonify, make_response
 from flask_login import login_user, login_required, logout_user
 
-from app.settings import Config
 from .models import User, db
-from .utils import logout_required
+from .utils import logout_required, get_fb_user
 
 authApp = Blueprint('authApp', __name__)
-
-
-def get_fb_user(access_token):
-    """Get user access_token and fetch user data."""
-    app_id = Config.fb_app_id
-    app_secret = Config.fb_app_secret
-    url = ("https://graph.facebook.com/oauth/access_token?"
-           "grant_type=fb_exchange_token&client_id=%s&client_secret=%s"
-           "&fb_exchange_token=%s" % (app_id, app_secret, access_token))
-    token = requests.get(url).json()
-    url = ('https://graph.facebook.com/v2.10/me/'
-           '?access_token=%s&fields=name,id,email' % token['access_token'])
-    response = requests.get(url).json()
-    return response
 
 
 @authApp.route('/fbsignup', methods=['POST'])
@@ -64,12 +48,6 @@ def fblogin():
                        "facebook account exists"
         }), 404)
     return jsonify({"message": "good"})
-
-
-@authApp.route('/', methods=['GET'])
-def home():
-    """Home page."""
-    return render_template('home.html')
 
 
 @authApp.route('/signup', methods=['GET', 'POST'])
