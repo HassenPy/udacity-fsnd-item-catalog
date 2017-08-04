@@ -7,6 +7,7 @@ from validators import url
 from validators.utils import ValidationFailure
 
 from app import db
+from auth.models import User
 
 
 class Category(db.Model):
@@ -92,7 +93,9 @@ class Item(db.Model):
         self.errors = {}
         self.validators = [
             self.validate_title,
-            self.validate_link
+            self.validate_link,
+            self.validate_author,
+            self.validate_category
         ]
 
     @reconstructor
@@ -102,7 +105,9 @@ class Item(db.Model):
         self.errors = {}
         self.validators = [
             self.validate_title,
-            self.validate_link
+            self.validate_link,
+            self.validate_author,
+            self.validate_category
         ]
 
     def validate_title(self):
@@ -132,6 +137,30 @@ class Item(db.Model):
 
         if errors:
             self.errors["link"] = errors
+
+    def validate_author(self):
+        """Author validator."""
+        field = self.author
+        errors = []
+
+        user = User.query.get(field)
+        if not user:
+            errors.append("Author doesn't exist")
+
+        if errors:
+            self.errors["author"] = errors
+
+    def validate_category(self):
+        """Author validator."""
+        field = self.category
+        errors = []
+
+        category = Category.query.get(field)
+        if not category:
+            errors.append("Category doesn't exist")
+
+        if errors:
+            self.errors["category"] = errors
 
     def is_valid(self):
         """Check if the values passed to the model are valid."""
