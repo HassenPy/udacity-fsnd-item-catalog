@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="catalog">
+  <div class="categories col-md-3 col-md-offset-1">
+    <h3 class="list-header">Communities</h3>
+    <ul class="list">
+      {% for category_l in categories %}
+      {% if category_l.id == category.id %}
+        <li class="list-item active">
+          <a href="{{ url_for('catalogApp.category_page', id=category_l.id) }}">
+            {{ category_l.title }}</a>
+        </li>
+        {% else %}
+        <li class="list-item">
+          <a href="{{ url_for('catalogApp.category_page', id=category_l.id) }}">
+            {{ category_l.title }}</a>
+        </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="items col-md-7">
+    <h3 class="list-header">Latest {{ category.title }} community posts</h3>
+    <ul class="list">
+      {% for item in category['items'] %}
+        <li class="list-item">
+          <a href="{{ item.link }}" target="_blank" rel="nofollow">
+            {{ item.title }}</a>
+          {% if current_user.is_authenticated and item.author == current_user.id %}
+          <span>
+            <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+              <i class="icon-pencil"></i>
+            </a>
+            <i class="icon-trash-empty"></i>
+          </span>
+          {% endif %}
+          <div>
+            <time class="timeago" datetime="{{item.created}}"></time>
+            <span class="author" data-author="/api/user/{{item.author}}/"></span>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block footer_scripts %}
+<script src="/static/js/timeago.min.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  $("time.timeago").timeago();
+  var authors = $(".author");
+  authors.each(function(author){
+    elm = $(authors[author]);
+    url = elm.data('author');
+    $.ajax({
+        method: "GET",
+        url: url,
+        context: elm,
+        success: function(response){
+          var username = response['username'];
+          this.html('by ' + username);
+        }
+      });
+    });
+});
+</script>
+{% endblock %}

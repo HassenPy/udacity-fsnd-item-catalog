@@ -14,7 +14,11 @@ a:hover, a:focus {
 p {
   margin: 0;
 }
-
+.center-block {
+  margin-right: auto;
+  margin-left: auto;
+  float: none;
+}
 /* helpers */
 .text-success {
   color: #74e19f;
@@ -22,7 +26,10 @@ p {
 .text-error {
   color: #F44336;
 }
-
+.highlight-link {
+  color: #337ab7;
+  text-decoration: underline;
+}
 
 /* navbar styles */
 .navbar {
@@ -67,10 +74,16 @@ p {
   padding: 2em;
   padding-left: 6em;
   box-shadow: 0 1px 4px rgba(51, 51, 51, 0.23);
-  border-top: 2px solid #54a8d9;
   text-align: left;
-  border-right: 2px solid #54a8d9;
   overflow: hidden;
+}
+.form.auth{
+  border-top: 2px solid #54a8d9;
+  border-right: 2px solid #54a8d9;
+}
+.form.crud {
+  border-top: 2px solid #777;
+  border-right: 2px solid #777;
 }
 .form-header {
   margin-bottom: 1em;
@@ -105,6 +118,10 @@ p {
   padding: .3em;
   vertical-align: top;
 }
+.form-group select {
+  background: #f8fafa;
+  padding: .25em .25em;
+}
 .form-group .error-message {
   display: inline-block;
   width: 250px;
@@ -117,10 +134,7 @@ p {
 .form-group.error input{
   border-color: #F44336;
 }
-
-
 .form .submit {
-  background: #54a8d9;
   color: #fff;
   border: none;
   width: 120px;
@@ -130,6 +144,12 @@ p {
   box-shadow: 0 4px 10px rgba(51, 51, 51, 0.39);
   transition: box-shadow 400ms;
   float: left;
+}
+.form.auth .submit {
+  background: #54a8d9;
+}
+.form.crud .submit {
+  background: #333;
 }
 .form .submit:hover {
   box-shadow: 0 8px 24px rgba(51, 51, 51, 0.39);
@@ -181,6 +201,63 @@ p {
   }
   .submit {
     margin: 1.5em 0;
+  }
+}
+
+/* catalog design */
+.catalog {
+  margin-top: 5em;
+}
+.categories {
+  background: #FFF;
+  border-top: 2px solid #777;
+}
+.items {
+  background: #ffffff;
+  border-top: 2px solid #777;
+  border-right: 2px solid #777;
+  margin-left: 1em;
+}
+.items.full{
+  margin: 0 auto;
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 1em 0;
+}
+.list-header {
+  margin: 0;
+  padding: 1em;
+}
+.list-item {
+  padding: 1em 2em;
+}
+.categories .list-item a:not(.highlight-link){
+  color: #333;
+}
+.categories .list-item a:hover{
+  color: #337ab7;
+}
+.categories .list-item.active:after{
+  content: ">";
+  margin-left: 1em;
+}
+.items .list-item a{
+  color: #286090;
+}
+
+@media screen and (max-width: 768px) {
+  .catalog {
+    padding: 0 4em;
+  }
+  .categories {
+    margin-top: 3em;
+  }
+  .items {
+    margin-left: 0;
+    border-top: 0;
+    border-right: 0;
   }
 }
 
