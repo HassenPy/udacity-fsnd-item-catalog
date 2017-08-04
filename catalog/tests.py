@@ -26,7 +26,7 @@ class authTest(unittest.TestCase):
         """
         Check if endpoint returns a list of categories when no id provided.
         """
-        response = self.app.get("/catalog/category/")
+        response = self.app.get("/api/category/")
         # use bootstrap script data
         assert(b"Computer stuff" in response.data)
         assert(b"Life hacks" in response.data)
@@ -34,17 +34,17 @@ class authTest(unittest.TestCase):
 
     def test_category_list_with_id(self):
         """Check if endpoint returns the right category with its items."""
-        response = self.app.get("/catalog/category/2/")
+        response = self.app.get("/api/category/2/")
         # use bootstrap script data
         assert(b"Life hacks" in response.data)
         # check for category items
-        assert(b"http://localhost:5000/catalog/item/4/" in response.data)
-        assert(b"http://localhost:5000/catalog/item/5/" in response.data)
+        assert(b"http://localhost:5000/api/item/4/" in response.data)
+        assert(b"http://localhost:5000/api/item/5/" in response.data)
         assert(response.status_code == 200)
 
     def test_category_post_csrf_protection(self):
         """Check if endpoint is csrf protected."""
-        response = self.app.post('/catalog/category/', data={
+        response = self.app.post('/api/category/', data={
         })
         assert(response.status_code == 403)
 
@@ -53,7 +53,7 @@ class authTest(unittest.TestCase):
         with self.app as c:
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/category/', data={
+            response = c.post('/api/category/', data={
                 '_csrf_token': token
             })
             assert(response.status_code == 401)
@@ -71,7 +71,7 @@ class authTest(unittest.TestCase):
 
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/category/', data={
+            response = c.post('/api/category/', data={
                 '_csrf_token': token
             })
             assert(response.status_code == 401)
@@ -90,7 +90,7 @@ class authTest(unittest.TestCase):
             # Check for required params
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/category/', data={
+            response = c.post('/api/category/', data={
                 'title': 'yo',
                 '_csrf_token': token
             })
@@ -99,7 +99,7 @@ class authTest(unittest.TestCase):
             # Check for erronous params
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/category/', data={
+            response = c.post('/api/category/', data={
                 'title': 'yo',
                 '_csrf_token': token
             })
@@ -108,7 +108,7 @@ class authTest(unittest.TestCase):
             # Check for existing category
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/category/', data={
+            response = c.post('/api/category/', data={
                 'title': 'Life hacks',
                 'description': 'new description',
                 '_csrf_token': token
@@ -126,7 +126,7 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.put('/catalog/category/1/', data={
+            response = c.put('/api/category/1/', data={
                 'title': 'Oh i changed :/'
             })
             assert(response.status_code == 401)
@@ -143,17 +143,17 @@ class authTest(unittest.TestCase):
             })
 
             # Missing required parameter
-            response = c.put('/catalog/category/1/')
+            response = c.put('/api/category/1/')
             assert(response.status_code == 400)
 
             # Check for erronous params
-            response = c.put('/catalog/category/1/', data={
+            response = c.put('/api/category/1/', data={
                 'title': 'yo',
             })
             assert(response.status_code == 400)
 
             # Check for non existing category
-            response = c.put('/catalog/category/999/')
+            response = c.put('/api/category/999/')
             assert(response.status_code == 404)
 
     def test_category_delete_priviliege(self):
@@ -167,7 +167,7 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.delete('/catalog/category/1/')
+            response = c.delete('/api/category/1/')
             assert(response.status_code == 401)
 
     def test_category_delete_non_existant_record(self):
@@ -181,7 +181,7 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.delete('/catalog/category/99/')
+            response = c.delete('/api/category/99/')
             assert(response.status_code == 404)
 
     def test_category_delete_existant_record(self):
@@ -195,23 +195,23 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.delete('/catalog/category/1/')
+            response = c.delete('/api/category/1/')
             assert(response.status_code == 200)
 
-            response = c.delete('/catalog/category/1/')
+            response = c.delete('/api/category/1/')
             assert(response.status_code == 404)
 
     def test_item_list_without_id(self):
         """Check if endpoint returns a list of item when no id provided."""
-        response = self.app.get("/catalog/item/")
+        response = self.app.get("/api/item/")
         # use bootstrap script data
-        assert(b"http://localhost:5000/catalog/item/1/" in response.data)
-        assert(b"http://localhost:5000/catalog/item/2/" in response.data)
+        assert(b"http://localhost:5000/api/item/1/" in response.data)
+        assert(b"http://localhost:5000/api/item/2/" in response.data)
         assert(response.status_code == 200)
 
     def test_item_with_id(self):
         """Check if endpoint returns the right item."""
-        response = self.app.get("/catalog/item/2/")
+        response = self.app.get("/api/item/2/")
         # use bootstrap script data
         assert(b"Testing Flask Apps, Something that is untested is broken"
                in response.data)
@@ -219,7 +219,7 @@ class authTest(unittest.TestCase):
 
     def test_item_post_csrf_protection(self):
         """Check if endpoint is csrf protected."""
-        response = self.app.post('/catalog/item/')
+        response = self.app.post('/api/item/')
         assert(response.status_code == 403)
 
     def test_item_unauthenticated_post(self):
@@ -227,7 +227,7 @@ class authTest(unittest.TestCase):
         with self.app as c:
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/item/', data={
+            response = c.post('/api/item/', data={
                 '_csrf_token': token
             })
             assert(response.status_code == 401)
@@ -246,7 +246,7 @@ class authTest(unittest.TestCase):
             # Check for required params
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/item/', data={
+            response = c.post('/api/item/', data={
                 'title': 'yo',
                 '_csrf_token': token
             })
@@ -255,7 +255,7 @@ class authTest(unittest.TestCase):
             # Check for erronous params
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/item/', data={
+            response = c.post('/api/item/', data={
                 'title': 'yo',
                 '_csrf_token': token
             })
@@ -264,7 +264,7 @@ class authTest(unittest.TestCase):
             # Check for existing category
             token = c.get('/csrf-token')
             token = json.loads(token.data.decode())['_csrf_token']
-            response = c.post('/catalog/item/', data={
+            response = c.post('/api/item/', data={
                 'title': 'Flask Application Factories',
                 'link': 'http://www.google.com',
                 'category': 1,
@@ -283,7 +283,7 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.put('/catalog/item/1/', data={
+            response = c.put('/api/item/1/', data={
                 'title': 'Oh i changed :/'
             })
             assert(response.status_code == 401)
@@ -300,17 +300,17 @@ class authTest(unittest.TestCase):
             })
 
             # Missing required parameter
-            response = c.put('/catalog/item/1/')
+            response = c.put('/api/item/1/')
             assert(response.status_code == 400)
 
             # Check for erronous params
-            response = c.put('/catalog/item/1/', data={
+            response = c.put('/api/item/1/', data={
                 'title': 'yo',
             })
             assert(response.status_code == 400)
 
             # Check for non existing category
-            response = c.put('/catalog/item/999/')
+            response = c.put('/api/item/999/')
             assert(response.status_code == 404)
 
     def test_item_delete_priviliege(self):
@@ -324,7 +324,7 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.delete('/catalog/item/1/')
+            response = c.delete('/api/item/1/')
             assert(response.status_code == 401)
 
     def test_item_delete_non_existant_record(self):
@@ -338,7 +338,7 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.delete('/catalog/item/99/')
+            response = c.delete('/api/item/99/')
             assert(response.status_code == 404)
 
     def test_item_delete_existant_record(self):
@@ -352,10 +352,10 @@ class authTest(unittest.TestCase):
                 '_csrf_token': token
             })
 
-            response = c.delete('/catalog/item/1/')
+            response = c.delete('/api/item/1/')
             assert(response.status_code == 200)
 
-            response = c.delete('/catalog/item/1/')
+            response = c.delete('/api/item/1/')
             assert(response.status_code == 404)
 
 
