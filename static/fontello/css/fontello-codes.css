@@ -1,4 +1,3 @@
 
-.icon-search:before { content: '\e800'; } /* '' */
-.icon-facebook:before { content: '\f30c'; } /* '' */
-.icon-gplus:before { content: '\f30f'; } /* '' */
+.icon-pencil:before { content: '\e801'; } /* '' */
+.icon-trash-empty:before { content: '\e802'; } /* '' */
