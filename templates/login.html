@@ -3,7 +3,7 @@
 {% block title %} Login{% endblock %}
 
 {% block content %}
-<form class="form" action="" method="post">
+<form class="form auth" action="" method="post">
   <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
   <div class="form-header col-xs-12">
       <h2>Login</h2>
