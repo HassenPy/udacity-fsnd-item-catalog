@@ -5,10 +5,11 @@ from app.settings import Config
 class CategoryPageSerializer(object):
     """Minimal paginator to dict serializer."""
 
-    def __init__(self, title, description, paginator):
+    def __init__(self, category, paginator):
         """PaginationSerializer constructor."""
-        self.title = title
-        self.description = description
+        self.id = category.id
+        self.title = category.title
+        self.description = category.description
         self.items = []
         for item in paginator.items:
             self.items.append(ItemSerializer(item).serialize())
@@ -19,6 +20,7 @@ class CategoryPageSerializer(object):
     def serialize(self):
         """Return dict representation of paginator."""
         return {
+            'id': self.id,
             'title': self.title,
             'description': self.description,
             'items': self.items,
@@ -40,8 +42,10 @@ class CategoryListSerializer(object):
         categories_serialized = []
         for category in self.categories:
             categories_serialized.append({
+                'id': category.id,
                 'title': category.title,
-                'location': '%s/catalog/category/%d/' %
+                'description': category.description,
+                'location': '%s/api/category/%d/' %
                                         (Config.domain, category.id)
             })
         return categories_serialized
@@ -58,11 +62,7 @@ class ItemListSerializer(object):
         """Return dict representation of Items."""
         serialized = []
         for item in self.items:
-            serialized.append({
-                'title': item.title,
-                'location': '%s/catalog/item/%d/' %
-                            (Config.domain, item.id)
-            })
+            serialized.append(ItemSerializer(item).serialize())
         return serialized
 
 
@@ -76,11 +76,13 @@ class ItemSerializer(object):
     def serialize(self):
         """Return dict representation of Item."""
         return {
+            'id': self.item.id,
             'title': self.item.title,
             'link': self.item.link,
             'created': self.item.created,
             'edited': self.item.edited,
-            'author': '%s/user/%d' % (Config.domain, self.item.author,),
-            'location': '%s/catalog/item/%d/' %
+            'category': self.item.category,
+            'author': self.item.author,
+            'location': '%s/api/item/%d/' %
                         (Config.domain, self.item.id)
         }
