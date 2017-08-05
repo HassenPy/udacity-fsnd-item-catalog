@@ -9,7 +9,7 @@ fb_app = json.loads(open('app/fb_app.json', 'r').read())
 class Config(object):
     """Base flask config."""
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../sqlite.db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///pickydb'
     SECRET_KEY = ('\xb8\x03\x89\xffS\xa7v\xe78Z3\x15\xab\xfeT~\xf9!|3l'
                   '{\xa7\x18\x95\xf1\x17LfXQ;')
     DEBUG = True
@@ -25,7 +25,7 @@ class Config(object):
 class TestConfig(object):
     """Base flask config."""
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../test.db'
+    SQLALCHEMY_DATABASE_URI = 'postgresql:///pickydbtest'
     SECRET_KEY = 'd7af2b93103e488dbc55a08b7eca6176'
     DEBUG = True
     TESTING = True
