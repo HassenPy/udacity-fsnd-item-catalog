@@ -20,8 +20,8 @@
   </div>
 </div>
 
-<div class="catalog">
-  <div class="categories col-md-3 col-md-offset-1">
+<div class="catalog row">
+  <div class="categories col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
     <h3 class="list-header">Communities</h3>
     <ul class="list">
       {% for category_l in categories %}
@@ -39,46 +39,48 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="items col-md-7">
-    <h3 class="list-header">Latest {{ category.title }} community posts</h3>
-    <ul class="list">
-      {% for item in category['items'] %}
-        <li class="list-item">
+  <div class="items col-xs-12 col-sm-7 col-md-7">
+    <h3 class="list-header col-xs-12">Latest {{ category.title }} community posts</h3>
+    <ul class="list col-xs-12">
+      {% for item in items['items'] %}
+        <li class="list-item pull-left">
           <div class="col-xs-12">
-          <a href="{{ item.link }}" target="_blank" rel="nofollow">
-            {{ item.title }}</a>
+            <a href="{{ item.link }}" target="_blank" rel="nofollow">
+              {{ item.title }}</a>
           </div>
-          <span>
-            <time class="timeago" datetime="{{item.created}}"></time>
-            <span class="author" data-author="/api/user/{{item.author}}/"></span>
-            <span class="category" data-category="/api/category/{{item.category}}/"></span>
-          </span>
-          {% if current_user.is_authenticated and
-            item.author == current_user.id or current_user.admin
-          %}
-          <span>
-            <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
-              <i class="icon-pencil"></i>
-            </a>
-            <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
-               data-toggle="modal" data-target="#deleteModal">
-              <i class="icon-trash-empty"></i>
-            </button>
-          </span>
-          {% endif %}
+          <div class="col-xs-12">
+            <span>
+              <time class="timeago" datetime="{{item.created}}"></time>
+              <span class="author" data-author="/api/user/{{item.author}}/"></span>
+            </span>
+            {% if current_user.is_authenticated and
+              item.author == current_user.id or current_user.admin
+            %}
+            <span>
+              <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+                <i class="icon-pencil"></i>
+              </a>
+              <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+                 data-toggle="modal" data-target="#deleteModal">
+                <i class="icon-trash-empty"></i>
+              </button>
+            </span>
+            {% endif %}
+          </div>
         </li>
       {% endfor %}
     </ul>
     <div class="col-xs-12 text-center">
-      {% if category.next_page %}
-      <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{category.next_page}}"
-         class="load highlight-link">
-        next</a>
-      {% endif %}
-      {% if category.prev_page %}
-      <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{category.prev_page}}"
+      {% if items.prev_num %}
+      <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{items.prev_num}}"
          class="load highlight-link">
         previous</a>
+      {% endif %}
+      {{items.page}}
+      {% if items.next_num %}
+      <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{items.next_num}}"
+         class="load highlight-link">
+        next</a>
       {% endif %}
     </div>
   </div>

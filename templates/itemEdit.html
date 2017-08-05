@@ -38,9 +38,9 @@
     <select class="select" name="category" id="category">
       {% for category in categories %}
       {% if category.id == item.category %}
-        <option value="{{ category.id }}" selected>{{ category.title }}</option>
+      <option value="{{ category.id }}" selected>{{ category.title }}</option>
       {% else %}
-        <option value="{{ category.id }}">{{ category.title }}</option>
+      <option value="{{ category.id }}">{{ category.title }}</option>
       {% endif %}
       {% endfor %}
     </select>

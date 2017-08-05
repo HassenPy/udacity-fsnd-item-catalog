@@ -15,7 +15,7 @@
 
   <div class="form-group col-xs-12 {% if errors.title %} error {% endif %}">
     <label for="title">Descriptive Title</label>
-    <input id="title" type="text" name="title" value="">
+    <input id="title" type="text" name="title" value="{{ fields['title'] }}">
     {% if errors.title %}
       {% for error in errors.title %}
         <div class="error-message">{{ error }}</div>
@@ -25,7 +25,7 @@
 
   <div class="form-group col-xs-12 {% if errors.link %} error {% endif %}">
     <label for="link">Link</label>
-    <input id="link" type="url" name="link" value="">
+    <input id="link" type="url" name="link" value="{{fields['link']}}">
     {% if errors.link %}
       {% for error in errors.link %}
         <div class="error-message">{{ error }}</div>
@@ -37,7 +37,11 @@
     <label for="category">Category</label>
     <select class="select" name="category" id="category">
       {% for category in categories %}
-      <option value="{{ category.id }}">{{ category.title }}</option>
+        {% if fields['category'] == category.id %}
+          <option value="{{ category.id }}" selected>{{ category.title }}</option>
+        {% else %}
+          <option value="{{ category.id }}">{{ category.title }}</option>
+        {% endif %}
       {% endfor %}
     </select>
     {% if errors.category %}

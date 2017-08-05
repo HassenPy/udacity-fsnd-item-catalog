@@ -234,12 +234,14 @@ p {
 .categories {
   background: #FFF;
   border-top: 2px solid #777;
+  overflow: hidden;
 }
 .items {
   background: #ffffff;
   border-top: 2px solid #777;
   border-right: 2px solid #777;
   margin-left: 1em;
+  overflow: hidden;
 }
 .items.full{
   margin: 0 auto;
@@ -270,12 +272,17 @@ p {
   color: #286090;
 }
 
-@media screen and (max-width: 768px) {
-  .catalog {
-    padding: 0 4em;
+@media screen and (max-width: 1310px) {
+  .dropdown-menu {
+    right: 0;
+    left: auto;
   }
-  .categories {
-    margin-top: 3em;
+}
+
+@media screen and (max-width: 767px) {
+  .catalog {
+    padding: 0 2em;
+    margin-top: 2em;
   }
   .items {
     margin-left: 0;

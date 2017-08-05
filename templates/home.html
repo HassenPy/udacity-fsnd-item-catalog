@@ -20,7 +20,7 @@
   </div>
 </div>
 
-<div class="catalog">
+<div class="catalog row">
   <div class="categories col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
     <h3 class="list-header">Communities</h3>
     <ul class="list">
@@ -41,29 +41,31 @@
     <h3 class="list-header">Latest posts</h3>
     <ul class="list">
       {% for item in items %}
-        <li class="list-item">
+        <li class="list-item pull-left">
           <div class="col-xs-12">
           <a href="{{ item.link }}" target="_blank" rel="nofollow">
             {{ item.title }}</a>
           </div>
-          <span>
-            <time class="timeago" datetime="{{item.created}}"></time>
-            <span class="author" data-author="/api/user/{{item.author}}/"></span>
-            <span class="category" data-category="/api/category/{{item.category}}/"></span>
-          </span>
-          {% if current_user.is_authenticated and
-            item.author == current_user.id or current_user.admin
-          %}
-          <span>
-            <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
-              <i class="icon-pencil"></i>
-            </a>
-            <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
-               data-toggle="modal" data-target="#deleteModal">
-              <i class="icon-trash-empty"></i>
-            </button>
-          </span>
-          {% endif %}
+          <div class="col-xs-12">
+            <span>
+              <time class="timeago" datetime="{{item.created}}"></time>
+              <span class="author" data-author="/api/user/{{item.author}}/"></span>
+              <span class="category" data-category="/api/category/{{item.category}}/"></span>
+            </span>
+            {% if current_user.is_authenticated and
+              item.author == current_user.id or current_user.admin
+            %}
+            <span>
+              <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+                <i class="icon-pencil"></i>
+              </a>
+              <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+                 data-toggle="modal" data-target="#deleteModal">
+                <i class="icon-trash-empty"></i>
+              </button>
+            </span>
+            {% endif %}
+          </div>
         </li>
       {% endfor %}
     </ul>
