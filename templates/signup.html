@@ -3,58 +3,60 @@
 {% block title %}Join us!{% endblock %}
 
 {% block content %}
-<form class="form auth" action="" method="POST">
-  <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-  <div class="form-header col-xs-12">
+<section class="form auth">
+  <header class="form-header col-xs-12">
       <h2>Join the pickies</h2>
-      <div class="social">
+      <div class="social inline">
         <fb:login-button scope="public_profile,email" onlogin="sendToken();">
         </fb:login-button>
       </div>
-      <div class="col-xs-12 text-error" id="status"></div>
       <div class="separator col-xs-12">
         <hr class="pull-left">
         <p class="col-xs-12"> or signup manually </p>
       </div>
-  </div>
+  </header>
+  <form class="row" action="" method="POST">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="col-xs-12 text-error" id="status"></div>
 
-  <div class="form-group col-xs-12 {% if errors.username %}error{% endif %}">
-    <label for="username">Username</label>
-    <input id="username" type="text" name="username" value="">
-    {% if errors.username %}
-      {% for error in errors.username %}
-        <div class="error-message">{{ error }}</div>
-      {% endfor %}
-    {% endif %}
-  </div>
+    <fieldset class="form-group col-xs-12 {% if errors.username %}error{% endif %}">
+      <label for="username">Username</label>
+      <input id="username" type="text" name="username" value="">
+      {% if errors.username %}
+        {% for error in errors.username %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+    </fieldset>
 
-  <div class="form-group col-xs-12 {% if errors.password %}error{% endif %}">
-    <label for="password">Password</label>
-    <input id="password" type="password" name="password" value="">
-    {% if errors.password %}
-      {% for error in errors.password %}
-        <div class="error-message">{{ error }}</div>
-      {% endfor %}
-    {% endif %}
-  </div>
+    <fieldset class="form-group col-xs-12 {% if errors.password %}error{% endif %}">
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" value="">
+      {% if errors.password %}
+        {% for error in errors.password %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+    </fieldset>
 
-  <div class="form-group col-xs-12 {% if errors.email %}error{% endif %}">
-    <label for="email">Email</label>
-    <input id="email" type="email" name="email" value="">
-    {% if errors.email %}
-      {% for error in errors.email %}
-        <div class="error-message">{{ error }}</div>
-      {% endfor %}
-    {% endif %}
-  </div>
+    <fieldset class="form-group col-xs-12 {% if errors.email %}error{% endif %}">
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" value="">
+      {% if errors.email %}
+        {% for error in errors.email %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+    </fieldset>
 
-  <div class="form-group col-xs-12">
-    <label for="emailConfirm">Confirm email</label>
-    <input id="emailConfirm" type="email" name="emailConfirm" value="">
-  </div>
+    <fieldset class="form-group col-xs-12">
+      <label for="emailConfirm">Confirm email</label>
+      <input id="emailConfirm" type="email" name="emailConfirm" value="">
+    </fieldset>
 
-  <input type="submit" value="signup" class="submit">
-</form>
+    <input type="submit" value="signup" class="submit">
+  </form>
+</section>
 
 {% endblock %}
 

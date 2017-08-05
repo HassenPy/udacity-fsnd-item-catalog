@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
+<section class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -18,11 +18,11 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="catalog row">
-  <div class="categories col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
-    <h3 class="list-header">Communities</h3>
+<section class="categories col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
+  <header><h3 class="list-header">Communities</h3></header>
+  <nav>
     <ul class="list">
       {% for category in categories %}
         <li class="list-item">
@@ -36,41 +36,39 @@
           All communities</a>
       </li>
     </ul>
-  </div>
-  <div class="items col-xs-12 col-sm-7 col-md-7">
-    <h3 class="list-header">Latest posts</h3>
-    <ul class="list">
-      {% for item in items %}
-        <li class="list-item pull-left">
-          <div class="col-xs-12">
-          <a href="{{ item.link }}" target="_blank" rel="nofollow">
-            {{ item.title }}</a>
-          </div>
-          <div class="col-xs-12">
-            <span>
-              <time class="timeago" datetime="{{item.created}}"></time>
-              <span class="author" data-author="/api/user/{{item.author}}/"></span>
-              <span class="category" data-category="/api/category/{{item.category}}/"></span>
-            </span>
-            {% if current_user.is_authenticated and
-              item.author == current_user.id or current_user.admin
-            %}
-            <span>
-              <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
-                <i class="icon-pencil"></i>
-              </a>
-              <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
-                 data-toggle="modal" data-target="#deleteModal">
-                <i class="icon-trash-empty"></i>
-              </button>
-            </span>
-            {% endif %}
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
+  </nav>
+</section>
+<section class="items col-xs-12 col-sm-7 col-md-7">
+  <header><h3 class="list-header">Latest posts</h3></header>
+  {% for item in items %}
+    <article class="list-item col-xs-12 pull-left">
+      <header class="col-xs-12">
+        <a href="{{ item.link }}" target="_blank" rel="nofollow">
+          {{ item.title }}</a>
+      </header>
+      <div class="col-xs-12">
+        <span class="col-xs-12">
+          <time class="timeago" datetime="{{item.created}}"></time>
+          <span class="author" data-author="/api/user/{{item.author}}/"></span>
+          <span class="category" data-category="/api/category/{{item.category}}/"></span>
+        </span>
+        {% if current_user.is_authenticated and
+          item.author == current_user.id or current_user.admin
+        %}
+        <span class="col-xs-12">
+          <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+            <i class="icon-pencil"></i>
+          </a>
+          <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+             data-toggle="modal" data-target="#deleteModal">
+            <i class="icon-trash-empty"></i>
+          </button>
+        </span>
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+</section>
 {% endblock %}
 
 {% block footer_scripts %}

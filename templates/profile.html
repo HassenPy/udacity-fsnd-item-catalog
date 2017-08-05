@@ -3,7 +3,7 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
+<section class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -18,39 +18,37 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<div class="catalog row">
-  <div class="items full col-xs-12 col-sm-6 center-block">
+<section class="items full col-xs-12 col-sm-6 center-block">
+  <header>
     <h3 class="list-header">Your picks</h3>
     <div id="status"></div>
-    <ul class="list col-xs-12">
-      {% for item in items %}
-        <li class="list-item pull-left">
-          <div class="col-xs-12">
-          <a href="{{ item.link }}" target="_blank" rel="nofollow">
-            {{ item.title }}</a>
-          </div>
-          <div class="col-xs-12">
-            <span>
-              <time class="timeago" datetime="{{item.created}}"></time>
-              <span class="category" data-category="/api/category/{{item.category}}/"></span>
-            </span>
-            <span>
-              <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
-                <i class="icon-pencil"></i>
-              </a>
-              <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
-                 data-toggle="modal" data-target="#deleteModal">
-                <i class="icon-trash-empty"></i>
-              </button>
-            </span>
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
+  </header>
+  {% for item in items %}
+    <article class="list-item pull-left">
+      <header class="col-xs-12">
+      <a href="{{ item.link }}" target="_blank" rel="nofollow">
+        {{ item.title }}</a>
+      </header>
+      <div class="col-xs-12">
+        <span class="col-xs-12">
+          <time class="timeago" datetime="{{item.created}}"></time>
+          <span class="category" data-category="/api/category/{{item.category}}/"></span>
+        </span>
+        <span class="col-xs-12">
+          <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+            <i class="icon-pencil"></i>
+          </a>
+          <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+             data-toggle="modal" data-target="#deleteModal">
+            <i class="icon-trash-empty"></i>
+          </button>
+        </span>
+      </div>
+    </article>
+  {% endfor %}
+</section>
 {% endblock %}
 
 {% block footer_scripts %}

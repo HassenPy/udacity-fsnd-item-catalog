@@ -3,8 +3,10 @@
 {% block title %} {{message.header}} {% endblock %}
 
 {% block content %}
-<div class="message {{ message.type }}">
-  <h2 class="text-success">{{ message.header }}</h2>
+<section class="message {{ message.type }}">
+  <header>
+    <h2 class="text-success">{{ message.header }}</h2>
+  </header>
   <p>{{ message.body }}</p>
-</div>
+</section>
 {% endblock %}

@@ -1,56 +1,57 @@
 {% extends 'base.html' %}
 
-{% block title %} Edit your pick{% endblock %}
+{% block title %} Edit a pick{% endblock %}
 
 {% block content %}
-<form class="form crud" action="" method="POST" id="itemForm">
-  <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-  <div class="form-header col-xs-12">
-      <h2>Edit your pick</h2>
-  </div>
-
-  {% if error %}
-    <div class="col-xs-12 text-error" id="status">{{error}}</div>
-  {% endif %}
-
-  <div class="form-group col-xs-12 {% if errors.title %} error {% endif %}">
-    <label for="title">Descriptive Title</label>
-    <input id="title" type="text" name="title" value="{{ item.title }}">
-    {% if errors.title %}
-      {% for error in errors.title %}
-        <div class="error-message">{{ error }}</div>
-      {% endfor %}
+<section class="form crud">
+  <header class="form-header col-xs-12">
+      <h2>Edit a pick</h2>
+  </header>
+  <form class="row" id="itemForm" action="" method="post">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    {% if error %}
+      <div class="col-xs-12 text-error" id="status">{{error}}</div>
     {% endif %}
-  </div>
 
-  <div class="form-group col-xs-12 {% if errors.link %} error {% endif %}">
-    <label for="link">Link</label>
-    <input id="link" type="url" name="link" value="{{ item.link }}">
-    {% if errors.link %}
-      {% for error in errors.link %}
-        <div class="error-message">{{ error }}</div>
-      {% endfor %}
-    {% endif %}
-  </div>
-
-  <div class="form-group col-xs-12 {% if errors.category %} error {% endif %}">
-    <label for="category">Category</label>
-    <select class="select" name="category" id="category">
-      {% for category in categories %}
-      {% if category.id == item.category %}
-      <option value="{{ category.id }}" selected>{{ category.title }}</option>
-      {% else %}
-      <option value="{{ category.id }}">{{ category.title }}</option>
+    <fieldset class="form-group col-xs-12 {% if errors.title %} error {% endif %}">
+      <label for="title">Descriptive Title</label>
+      <input id="title" type="text" name="title" value="{{ item.title }}">
+      {% if errors.title %}
+        {% for error in errors.title %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
       {% endif %}
-      {% endfor %}
-    </select>
-    {% if errors.category %}
-      {% for error in errors.category %}
-        <div class="error-message">{{ error }}</div>
-      {% endfor %}
-    {% endif %}
-  </div>
+    </fieldset>
 
-  <input type="submit" value="save" class="submit">
-</form>
+    <fieldset class="form-group col-xs-12 {% if errors.link %} error {% endif %}">
+      <label for="link">Link</label>
+      <input id="link" type="url" name="link" value="{{item.link}}">
+      {% if errors.link %}
+        {% for error in errors.link %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+    </fieldset>
+
+    <fieldset class="form-group col-xs-12 {% if errors.category %} error {% endif %}">
+      <label for="category">Category</label>
+      <select class="select" name="category" id="category">
+        {% for category in categories %}
+          {% if item.category == category.id %}
+            <option value="{{ category.id }}" selected>{{ category.title }}</option>
+          {% else %}
+            <option value="{{ category.id }}">{{ category.title }}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      {% if errors.category %}
+        {% for error in errors.category %}
+          <div class="error-message">{{ error }}</div>
+        {% endfor %}
+      {% endif %}
+    </fieldset>
+
+    <input type="submit" value="share" class="submit">
+  </form>
+</section>
 {% endblock %}

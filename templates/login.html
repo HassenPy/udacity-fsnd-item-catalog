@@ -3,37 +3,38 @@
 {% block title %} Login{% endblock %}
 
 {% block content %}
-<form class="form auth" action="" method="post">
-  <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-  <div class="form-header col-xs-12">
+<section class="form auth">
+  <header class="form-header col-xs-12">
       <h2>Login</h2>
       <div class="social inline">
         <fb:login-button scope="public_profile,email" onlogin="sendToken();">
         </fb:login-button>
       </div>
-  </div>
+  </header>
+  <form class="row" action="" method="post">
+    <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+    <div class="col-xs-12 text-error" id="status"></div>
 
-  <div class="col-xs-12 text-error" id="status"></div>
+    <fieldset class="form-group col-xs-12 {% if error %} error {% endif %}">
+      <label for="username">Username or Email</label>
+      <input id="username" type="text" name="username" value="">
+      {% if error %}
+          <div class="error-message">{{ error }}</div>
+      {% endif %}
+    </fieldset>
 
-  <div class="form-group col-xs-12 {% if error %} error {% endif %}">
-    <label for="username">Username or Email</label>
-    <input id="username" type="text" name="username" value="">
-    {% if error %}
-        <div class="error-message">{{ error }}</div>
-    {% endif %}
-  </div>
+    <fieldset class="form-group col-xs-12">
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" value="">
+    </fieldset>
 
-  <div class="form-group col-xs-12">
-    <label for="password">Password</label>
-    <input id="password" type="password" name="password" value="">
-  </div>
+    <div class="col-xs-12">
+      <p>No a member yet? <a href="{{ url_for('authApp.signup') }}">signup</a></p>
+    </div>
 
-  <div class="col-xs-12">
-    <p>No a member yet? <a href="{{ url_for('authApp.signup') }}">signup</a></p>
-  </div>
-
-  <input type="submit" value="login" class="submit">
-</form>
+    <input type="submit" value="login" class="submit">
+  </form>
+</section>
 {% endblock %}
 
 
