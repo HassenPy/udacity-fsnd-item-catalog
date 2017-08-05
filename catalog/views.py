@@ -1,48 +1,69 @@
 """Catalog views."""
-import json
 from flask import Blueprint, render_template, request, redirect, session, abort
 from flask_login import login_required
+from sqlalchemy.exc import IntegrityError
 
-from .models import Item
-from .api import CategoryAPI, ItemAPI
+from app import db
+
+from auth.models import User
+from .models import Item, Category
 
 catalogApp = Blueprint('catalogApp', __name__)
-
-category_api = CategoryAPI()
-item_api = ItemAPI()
 
 
 @catalogApp.route('/', methods=['GET'])
 def home():
     """Display latest items."""
-    categories = category_api.get().data.decode('utf-8')
-    items = item_api.get().data.decode('utf-8')
+    categories = Category.query.all()[:5]
+    items = db.session.query(Item).order_by(Item.created.desc()).all()
     return render_template(
         'home.html',
-        categories=json.loads(categories),
-        items=json.loads(items)[:10]
+        categories=categories,
+        items=items
     )
 
 
 @catalogApp.route('/category/', methods=['GET'])
 def category_list():
     """GET Method handler."""
-    categories = category_api.get().data.decode('utf-8')
+    categories = Category.query.all()
     return render_template(
         'categoryList.html',
-        categories=json.loads(categories),
+        categories=categories,
     )
 
 
 @catalogApp.route('/category/<int:id>/', methods=['GET'])
 def category_page(id):
     """Category page."""
-    category = category_api.get(id).data.decode('utf-8')
-    categories = category_api.get().data.decode('utf-8')
+    category = Category.query.get(id)
+    offset = request.args.get('o', 1)
+    categories = Category.query.all()[:5]
+    if not category:
+        abort(404)
+
+    # check if passed offset is an integer
+    try:
+        offset = int(offset)
+    except ValueError:
+        offset = 1
+
+    if category:
+        # Fetch paginated category items
+        items = Item.query.filter_by(
+            category=id
+        ).paginate(offset, 3)
+        return render_template(
+            'category.html',
+            category=category,
+            items=items,
+            categories=categories
+        )
     return render_template(
         'category.html',
-        category=json.loads(category),
-        categories=json.loads(categories)
+        category=category,
+        items=items,
+        categories=categories
     )
 
 
@@ -50,23 +71,53 @@ def category_page(id):
 @login_required
 def item_add():
     """Add item view."""
-    categories = category_api.get().data.decode('utf-8')
+    categories = Category.query.all()
+    title = request.form.get('title', '')
+    link = request.form.get('link', '')
+    category = request.form.get('category', '')
+    try:
+        category = int(category)
+    except ValueError:
+        category = ''
+    fields = {'title': title, 'link': link, 'category': category}
+
     if request.method == 'POST':
-        response = item_api.post()
-        if response.status_code != 201:
-            data = json.loads(response.data.decode('utf-8'))
-            error = data.get('error', None)
-            errors = data.get('errors', None)
+        # Check if required fields exist in POST values.
+        if not (title and link and category):
             return render_template(
                 'itemAdd.html',
-                categories=json.loads(categories),
-                error=error,
-                errors=errors
+                fields=fields,
+                categories=categories,
+                error="all fields are required",
+                errors=None
             )
-        return redirect('/')
+
+        item = Item(title=title, link=link,
+                    category=category, author=session['user_id'])
+        if item.is_valid():
+            try:
+                db.session.add(item)
+                db.session.commit()
+                return redirect('/')
+            except IntegrityError:
+                return render_template(
+                    'itemAdd.html',
+                    categories=categories,
+                    fields=fields,
+                    error=None,
+                    errors={'title': 'a Pick with same title already exists'}
+                )
+        return render_template(
+            'itemAdd.html',
+            categories=categories,
+            fields=fields,
+            error=None,
+            errors=item.errors
+        )
     return render_template(
         'itemAdd.html',
-        categories=json.loads(categories),
+        categories=categories,
+        fields=fields,
         error=None,
         errors=None
     )
@@ -75,28 +126,62 @@ def item_add():
 @catalogApp.route('/item/<int:id>/edit/', methods=['GET', 'POST'])
 @login_required
 def item_edit(id):
-    """Edit item view."""
-    item = json.loads(item_api.get(id).data.decode('utf-8'))
-    categories = json.loads(category_api.get().data.decode('utf-8'))
+    """Add item view."""
+    item = Item.query.get(id)
+    if not item:
+        abort(404)
+    categories = Category.query.all()
 
-    if item['author'] != session['user_id']:
+    # Check permission
+    user_id = session.get('user_id', False)
+    if user_id:
+        admin = User.query.get(user_id).admin
+
+    if (item.author != user_id) and not admin:
         abort(401)
 
     if request.method == 'POST':
-        response = item_api.put(id)
-        if response.status_code != 200:
-            data = json.loads(response.data.decode('utf-8'))
-            print(data)
-            error = data.get('error', None)
-            errors = data.get('errors', None)
+        # Check if required fields exist in POST values.
+        title = request.form.get('title', '')
+        link = request.form.get('link', '')
+        category = request.form.get('category', '')
+        # a little type conversion for template comparison
+        try:
+            category = int(category)
+        except ValueError:
+            category = ''
+
+        if not (title and link and category):
             return render_template(
                 'itemEdit.html',
-                categories=categories,
                 item=item,
-                error=error,
-                errors=errors
+                categories=categories,
+                error="all fields are required",
+                errors=None
             )
-        return redirect('/')
+
+        item.title = title
+        item.link = link
+        item.category = category
+        if item.is_valid():
+            try:
+                db.session.commit()
+                return redirect('/')
+            except IntegrityError:
+                return render_template(
+                    'itemEdit.html',
+                    categories=categories,
+                    item=item,
+                    error=None,
+                    errors={'title': 'a Pick with same title already exists'}
+                )
+        return render_template(
+            'itemEdit.html',
+            categories=categories,
+            item=item,
+            error=None,
+            errors=item.errors
+        )
     return render_template(
         'itemEdit.html',
         categories=categories,

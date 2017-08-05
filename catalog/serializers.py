@@ -2,20 +2,14 @@
 from app.settings import Config
 
 
-class CategoryPageSerializer(object):
+class CategorySerializer(object):
     """Minimal paginator to dict serializer."""
 
-    def __init__(self, category, paginator):
+    def __init__(self, category):
         """PaginationSerializer constructor."""
         self.id = category.id
         self.title = category.title
         self.description = category.description
-        self.items = []
-        for item in paginator.items:
-            self.items.append(ItemSerializer(item).serialize())
-        self.page = paginator.page
-        self.next_page = paginator.next_num
-        self.prev_page = paginator.prev_num
 
     def serialize(self):
         """Return dict representation of paginator."""
@@ -23,47 +17,7 @@ class CategoryPageSerializer(object):
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'items': self.items,
-            'page': self.page,
-            'next_page': self.next_page,
-            'prev_page': self.prev_page
         }
-
-
-class CategoryListSerializer(object):
-    """Minimal paginator to dict serializer."""
-
-    def __init__(self, categories):
-        """PaginationSerializer constructor."""
-        self.categories = categories
-
-    def serialize(self):
-        """Return dict representation of paginator."""
-        categories_serialized = []
-        for category in self.categories:
-            categories_serialized.append({
-                'id': category.id,
-                'title': category.title,
-                'description': category.description,
-                'location': '%s/api/category/%d/' %
-                                        (Config.domain, category.id)
-            })
-        return categories_serialized
-
-
-class ItemListSerializer(object):
-    """Item object list to dict serializer."""
-
-    def __init__(self, items):
-        """ItemListSerializer constructor."""
-        self.items = items
-
-    def serialize(self):
-        """Return dict representation of Items."""
-        serialized = []
-        for item in self.items:
-            serialized.append(ItemSerializer(item).serialize())
-        return serialized
 
 
 class ItemSerializer(object):
