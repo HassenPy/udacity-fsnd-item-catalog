@@ -14,8 +14,7 @@ item_api = ItemAPI()
 
 @catalogApp.route('/', methods=['GET'])
 def home():
-    """GET Method handler."""
-    # If not providing id, return all categories.
+    """Display latest items."""
     categories = category_api.get().data.decode('utf-8')
     items = item_api.get().data.decode('utf-8')
     return render_template(
@@ -37,7 +36,7 @@ def category_list():
 
 @catalogApp.route('/category/<int:id>/', methods=['GET'])
 def category_page(id):
-    """GET Method handler."""
+    """Category page."""
     category = category_api.get(id).data.decode('utf-8')
     categories = category_api.get().data.decode('utf-8')
     return render_template(
@@ -47,23 +46,10 @@ def category_page(id):
     )
 
 
-@login_required
-@catalogApp.route('/profile/', methods=['GET'])
-def user_profile():
-    """GET Method handler."""
-    user_id = session['user_id']
-    items = Item.query.filter_by(author=user_id).all()
-    return render_template(
-        'profile.html',
-        items=items
-    )
-
-
 @catalogApp.route('/item/add/', methods=['GET', 'POST'])
 @login_required
 def item_add():
-    """GET Method handler."""
-    # ToDo: handle other status codes
+    """Add item view."""
     categories = category_api.get().data.decode('utf-8')
     if request.method == 'POST':
         response = item_api.post()
@@ -89,7 +75,7 @@ def item_add():
 @catalogApp.route('/item/<int:id>/edit/', methods=['GET', 'POST'])
 @login_required
 def item_edit(id):
-    """GET Method handler."""
+    """Edit item view."""
     item = json.loads(item_api.get(id).data.decode('utf-8'))
     categories = json.loads(category_api.get().data.decode('utf-8'))
 
@@ -117,4 +103,16 @@ def item_edit(id):
         item=item,
         error=None,
         errors=None
+    )
+
+
+@catalogApp.route('/profile/', methods=['GET'])
+@login_required
+def user_profile():
+    """User profile showing his additions."""
+    user_id = session['user_id']
+    items = Item.query.filter_by(author=user_id).all()
+    return render_template(
+        'profile.html',
+        items=items
     )
