@@ -15,6 +15,21 @@ $(function(){
       });
     });
 
+    var categories = $(".category");
+    categories.each(function(author){
+      elm = $(categories[author]);
+      url = elm.data('category');
+      $.ajax({
+          method: "GET",
+          url: url,
+          context: elm,
+          success: function(response){
+            var title = response['title'];
+            this.html(' (' + title + ')');
+          }
+        });
+      });
+
     $('#deleteModal').on('shown.bs.modal', function (e) {
       e.preventDefault();
     });
