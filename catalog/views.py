@@ -52,7 +52,7 @@ def category_page(id):
         # Fetch paginated category items
         items = Item.query.filter_by(
             category=id
-        ).paginate(offset, 3)
+        ).paginate(offset, 10)
         return render_template(
             'category.html',
             category=category,
