@@ -1,5 +1,4 @@
 """JSON serializers for the catalog app."""
-from app.settings import Config
 
 
 class CategorySerializer(object):
@@ -36,7 +35,5 @@ class ItemSerializer(object):
             'created': self.item.created,
             'edited': self.item.edited,
             'category': self.item.category,
-            'author': self.item.author,
-            'location': '%s/api/item/%d/' %
-                        (Config.domain, self.item.id)
+            'author': self.item.author
         }
