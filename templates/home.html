@@ -42,9 +42,18 @@
     <ul class="list">
       {% for item in items %}
         <li class="list-item">
+          <div class="col-xs-12">
           <a href="{{ item.link }}" target="_blank" rel="nofollow">
             {{ item.title }}</a>
-          {% if current_user.is_authenticated and item.author == current_user.id %}
+          </div>
+          <span>
+            <time class="timeago" datetime="{{item.created}}"></time>
+            <span class="author" data-author="/api/user/{{item.author}}/"></span>
+            <span class="category" data-category="/api/category/{{item.category}}/"></span>
+          </span>
+          {% if current_user.is_authenticated and
+            item.author == current_user.id or current_user.admin
+          %}
           <span>
             <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
               <i class="icon-pencil"></i>
@@ -55,10 +64,6 @@
             </button>
           </span>
           {% endif %}
-          <div>
-            <time class="timeago" datetime="{{item.created}}"></time>
-            <span class="author" data-author="/api/user/{{item.author}}/"></span>
-          </div>
         </li>
       {% endfor %}
     </ul>

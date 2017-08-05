@@ -44,9 +44,18 @@
     <ul class="list">
       {% for item in category['items'] %}
         <li class="list-item">
+          <div class="col-xs-12">
           <a href="{{ item.link }}" target="_blank" rel="nofollow">
             {{ item.title }}</a>
-          {% if current_user.is_authenticated and item.author == current_user.id %}
+          </div>
+          <span>
+            <time class="timeago" datetime="{{item.created}}"></time>
+            <span class="author" data-author="/api/user/{{item.author}}/"></span>
+            <span class="category" data-category="/api/category/{{item.category}}/"></span>
+          </span>
+          {% if current_user.is_authenticated and
+            item.author == current_user.id or current_user.admin
+          %}
           <span>
             <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
               <i class="icon-pencil"></i>
@@ -57,17 +66,24 @@
             </button>
           </span>
           {% endif %}
-          <div>
-            <time class="timeago" datetime="{{item.created}}"></time>
-            <span class="author" data-author="/api/user/{{item.author}}/"></span>
-          </div>
         </li>
       {% endfor %}
     </ul>
+    <div class="col-xs-12 text-center">
+      {% if category.next_page %}
+      <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{category.next_page}}"
+         class="load highlight-link">
+        next</a>
+      {% endif %}
+      {% if category.prev_page %}
+      <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{category.prev_page}}"
+         class="load highlight-link">
+        previous</a>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endblock %}
-
 
 {% block footer_scripts %}
 <script src="/static/js/timeago.min.js"></script>

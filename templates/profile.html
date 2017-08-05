@@ -27,8 +27,14 @@
     <ul class="list">
       {% for item in items %}
         <li class="list-item">
+          <div class="col-xs-12">
           <a href="{{ item.link }}" target="_blank" rel="nofollow">
             {{ item.title }}</a>
+          </div>
+          <span>
+            <time class="timeago" datetime="{{item.created}}"></time>
+            <span class="category" data-category="/api/category/{{item.category}}/"></span>
+          </span>
           <span>
             <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
               <i class="icon-pencil"></i>
@@ -38,9 +44,6 @@
               <i class="icon-trash-empty"></i>
             </button>
           </span>
-          <div>
-            <time class="timeago" datetime="{{item.created}}"></time>
-          </div>
         </li>
       {% endfor %}
     </ul>
