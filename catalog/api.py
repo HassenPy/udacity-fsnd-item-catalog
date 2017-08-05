@@ -252,7 +252,7 @@ class ItemAPI(MethodView):
 category_view = CategoryAPI.as_view('category_api')
 catalogAPI.add_url_rule('/api/category/',
                         view_func=category_view, methods=['GET', ])
-catalogAPI.add_url_rule('/api/category/<int:id>/',
+catalogAPI.add_url_rule('/api/category/<int:id>/', 'category_page',
                         view_func=category_view, methods=['GET', ])
 catalogAPI.add_url_rule('/api/category/',
                         view_func=category_view, methods=['POST', ])
