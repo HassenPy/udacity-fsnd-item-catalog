@@ -49,6 +49,10 @@ p {
   padding: 0;
   margin: 0;
 }
+.load {
+  display: inline-block;
+  padding: .5em;
+}
 
 /* navbar styles */
 .navbar {
