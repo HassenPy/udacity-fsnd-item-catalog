@@ -30,6 +30,25 @@ p {
   color: #337ab7;
   text-decoration: underline;
 }
+.btn-danger {
+  background: #F44336;
+  border: none;
+  padding: .5em .75em;
+  color: #fff;
+}
+.btn-cancel {
+  background: #ddd;
+  color: #333;
+  padding: .5em .75em;
+  border: none;
+}
+.btn-delete {
+  background: none;
+  border: 0;
+  color: #f44336;
+  padding: 0;
+  margin: 0;
+}
 
 /* navbar styles */
 .navbar {
