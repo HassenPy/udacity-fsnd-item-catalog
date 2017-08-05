@@ -7,6 +7,11 @@ body {
   /* Alternative bg: rgba(229, 248, 248, 0.3) */
   min-height: 500px;
 }
+.content{
+  margin-top: 2em;
+  padding: 0 2em;
+}
+
 /* Bootstrap resets */
 a:hover, a:focus {
   text-decoration: none;
@@ -19,6 +24,7 @@ p {
   margin-left: auto;
   float: none;
 }
+
 /* helpers */
 .text-success {
   color: #74e19f;
@@ -48,10 +54,6 @@ p {
   color: #f44336;
   padding: 0;
   margin: 0;
-}
-.load {
-  display: inline-block;
-  padding: .5em;
 }
 
 /* navbar styles */
@@ -91,7 +93,7 @@ p {
 /* form style */
 .form {
   width: 500px;
-  max-width: 90%;
+  max-width: 100%;
   margin: 4em auto;
   background: #fff;
   padding: 2em;
@@ -124,6 +126,7 @@ p {
   max-width: 380px;
   margin: 1.25em 0;
   float: left;
+  border: 0;
 }
 .form-group label {
   margin-bottom: .25em;
@@ -135,7 +138,7 @@ p {
 .form-group input {
   display: inline-block;
   width: 250px;
-  max-width: 100%;
+  max-width: 85%;
   border-radius: 4px;
   border: 1px solid #cdcdcd;
   padding: .3em;
@@ -218,15 +221,6 @@ p {
   border-right: 2px solid #F44336;
 }
 
-@media screen and (max-width: 700px) {
-  .form {
-    padding-left: 4.5em;
-  }
-  .submit {
-    margin: 1.5em 0;
-  }
-}
-
 /* catalog design */
 .catalog {
   margin-top: 5em;
@@ -288,6 +282,18 @@ p {
     margin-left: 0;
     border-top: 0;
     border-right: 0;
+  }
+  .form.crud {
+    border-right: 0;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .form {
+    padding-left: 4em;
+  }
+  .submit {
+    margin: 1.5em 0;
   }
 }
 

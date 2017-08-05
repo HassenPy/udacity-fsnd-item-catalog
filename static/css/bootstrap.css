@@ -5,8 +5,8 @@
  */
 
 /*!
- * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=0ab7e9be44d404b689c226f19e09c456)
- * Config saved to config.json and https://gist.github.com/0ab7e9be44d404b689c226f19e09c456
+ * Generated using the Bootstrap Customizer (http://getbootstrap.com/customize/?id=134bab6bfb523845266c71ffd2576714)
+ * Config saved to config.json and https://gist.github.com/134bab6bfb523845266c71ffd2576714
  */
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -1782,6 +1782,44 @@ pre code {
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+.pager {
+  padding-left: 0;
+  margin: 20px 0;
+  list-style: none;
+  text-align: center;
+}
+.pager li {
+  display: inline;
+}
+.pager li > a,
+.pager li > span {
+  display: inline-block;
+  padding: 5px 14px;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 15px;
+}
+.pager li > a:hover,
+.pager li > a:focus {
+  text-decoration: none;
+  background-color: #eeeeee;
+}
+.pager .next > a,
+.pager .next > span {
+  float: right;
+}
+.pager .previous > a,
+.pager .previous > span {
+  float: left;
+}
+.pager .disabled > a,
+.pager .disabled > a:hover,
+.pager .disabled > a:focus,
+.pager .disabled > span {
+  color: #777777;
+  background-color: #ffffff;
+  cursor: not-allowed;
+}
 .embed-responsive {
   position: relative;
   display: block;
@@ -1943,6 +1981,8 @@ pre code {
 .row:after,
 .nav:before,
 .nav:after,
+.pager:before,
+.pager:after,
 .modal-header:before,
 .modal-header:after,
 .modal-footer:before,
@@ -1956,6 +1996,7 @@ pre code {
 .container-fluid:after,
 .row:after,
 .nav:after,
+.pager:after,
 .modal-header:after,
 .modal-footer:after {
   clear: both;
