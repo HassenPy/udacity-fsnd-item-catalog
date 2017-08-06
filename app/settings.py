@@ -17,7 +17,7 @@ class Config(object):
                                    'templates')
     static_folder = os.path.join(os.path.dirname(base_dir),
                                  'static')
-    domain = "http://localhost:5000"
+    SERVER_NAME = "localhost:5000"
     fb_app_id = fb_app['id']
     fb_app_secret = fb_app['secret']
 
@@ -33,4 +33,4 @@ class TestConfig(object):
                                    'templates')
     static_folder = os.path.join(os.path.dirname(base_dir),
                                  'static')
-    domain = "http://localhost:5000"
+    SERVER_NAME = "localhost:5000"
