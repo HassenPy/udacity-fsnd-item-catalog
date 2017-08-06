@@ -57,6 +57,11 @@ class Category(db.Model):
             return False
         return True
 
+    @property
+    def absolute_path(self):
+        """Return domain independant absolute path."""
+        return "/category/%d/" % (self.id)
+
     def __unicode__(self):
         """Text representation of the Category class instance."""
         return '%s' % self.title
@@ -132,7 +137,7 @@ class Item(db.Model):
         # kind of weird way of raising a validation error.
         if isinstance(url(field, public=True), ValidationFailure):
             errors.append(
-                    "invalid link."
+                    "invalid link"
             )
 
         if errors:
@@ -157,7 +162,7 @@ class Item(db.Model):
 
         category = Category.query.get(field)
         if not category:
-            errors.append("Category doesn't exist")
+            errors.append("Community doesn't exist")
 
         if errors:
             self.errors["category"] = errors
