@@ -91,7 +91,7 @@ def pick_add():
             )
 
         pick = Pick(title=title, link=link,
-                    communities=communities, author=session['user_id'])
+                    community=community, author=session['user_id'])
         if pick.is_valid():
             try:
                 db.session.add(pick)
