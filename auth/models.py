@@ -59,7 +59,7 @@ class User(db.Model, UserMixin):
 
         if not str.isalnum(field):
             errors.append(
-                    "username must only use alphanumerics."
+                    "username must only use alphanumerics"
             )
         if not (len(field) in range(3, 13)):
             errors.append(
@@ -75,13 +75,19 @@ class User(db.Model, UserMixin):
         field = self.email
         errors = []
 
+        exists = self.query.filter_by(email=field).count()
+        if exists:
+            errors.append(
+                    "email already used"
+            )
+
         if not is_email(field, check_dns=True):
             errors.append(
-                    "email is invalid."
+                    "email is invalid"
             )
         if field != self.email1:
             errors.append(
-                    "emails do not match."
+                    "emails do not match"
             )
         if errors:
             self.errors["email"] = errors
@@ -93,11 +99,11 @@ class User(db.Model, UserMixin):
 
         if len(field) < 8:
             errors.append(
-                    "password must be at least 8 characters long."
+                    "password must be at least 8 characters long"
             )
         if field == self.username:
             errors.append(
-                    "Password cannot be the same as your username."
+                    "Password cannot be the same as your username"
             )
         if errors:
             self.errors["password"] = errors
