@@ -3,6 +3,7 @@ from uuid import uuid4
 from flask import Blueprint, request, render_template, redirect, \
                   session, jsonify, make_response
 from flask_login import login_user, login_required, logout_user
+from sqlalchemy.exc import IntegrityError
 
 from .models import User, db
 from .utils import logout_required, get_fb_user
@@ -63,11 +64,18 @@ def signup():
         )
         # Use the user model to validate the form data.
         if user.is_valid():
-            # Generate user password and commit changes to db.
-            user.make_password()
-            db.session.add(user)
-            db.session.commit()
-            return signup_success()
+            try:
+                # Generate user password and commit changes to db.
+                user.make_password()
+                db.session.add(user)
+                db.session.commit()
+                return signup_success()
+            except IntegrityError:
+                db.session.rollback()
+                return render_template(
+                    'signup.html',
+                    errors={'username': ['username already user']}
+                )
         return render_template('signup.html', errors=user.errors)
     return render_template('signup.html', errors=None)
 
