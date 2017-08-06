@@ -13,9 +13,9 @@ catalogApp = Blueprint('catalogApp', __name__)
 
 @catalogApp.route('/', methods=['GET'])
 def home():
-    """Display latest items."""
-    categories = Category.query.all()[:5]
-    items = db.session.query(Item).order_by(Item.created.desc()).all()
+    """Render the home page with latest items."""
+    categories = Category.query.limit(5).all()
+    items = Item.query.order_by(Item.created.desc()).limit(5).all()
     return render_template(
         'home.html',
         categories=categories,
@@ -25,7 +25,7 @@ def home():
 
 @catalogApp.route('/category/', methods=['GET'])
 def category_list():
-    """GET Method handler."""
+    """Render a list with all the communities."""
     categories = Category.query.all()
     return render_template(
         'categoryList.html',
@@ -35,10 +35,10 @@ def category_list():
 
 @catalogApp.route('/category/<int:id>/', methods=['GET'])
 def category_page(id):
-    """Category page."""
+    """Return a community page with paginated picks."""
     category = Category.query.get(id)
     offset = request.args.get('o', 1)
-    categories = Category.query.all()[:5]
+    categories = Category.query.limit(5).all()
     if not category:
         abort(404)
 
@@ -67,10 +67,10 @@ def category_page(id):
     )
 
 
-@catalogApp.route('/item/add/', methods=['GET', 'POST'])
+@catalogApp.route('/pick/add/', methods=['GET', 'POST'])
 @login_required
 def item_add():
-    """Add item view."""
+    """Handle adding a new pick."""
     categories = Category.query.all()
     title = request.form.get('title', '')
     link = request.form.get('link', '')
@@ -100,12 +100,13 @@ def item_add():
                 db.session.commit()
                 return redirect('/')
             except IntegrityError:
+                db.session.rollback()
                 return render_template(
                     'itemAdd.html',
                     categories=categories,
                     fields=fields,
                     error=None,
-                    errors={'title': 'a Pick with same title already exists'}
+                    errors={'title': ['a Pick with same title already exists']}
                 )
         return render_template(
             'itemAdd.html',
@@ -123,10 +124,10 @@ def item_add():
     )
 
 
-@catalogApp.route('/item/<int:id>/edit/', methods=['GET', 'POST'])
+@catalogApp.route('/pick/<int:id>/edit/', methods=['GET', 'POST'])
 @login_required
 def item_edit(id):
-    """Add item view."""
+    """Handle editing an existing pick."""
     item = Item.query.get(id)
     if not item:
         abort(404)
@@ -173,7 +174,7 @@ def item_edit(id):
                     categories=categories,
                     item=item,
                     error=None,
-                    errors={'title': 'a Pick with same title already exists'}
+                    errors={'title': ['a Pick with same title already exists']}
                 )
         return render_template(
             'itemEdit.html',
@@ -194,7 +195,7 @@ def item_edit(id):
 @catalogApp.route('/profile/', methods=['GET'])
 @login_required
 def user_profile():
-    """User profile showing his additions."""
+    """Render the user profile showing his shared picks."""
     user_id = session['user_id']
     items = Item.query.filter_by(author=user_id).all()
     return render_template(
