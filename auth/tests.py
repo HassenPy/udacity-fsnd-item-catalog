@@ -1,26 +1,12 @@
+"""Test module for the auth app."""
 import unittest
 import json
 
-from app import create_app
-from app.settings import TestConfig
-from bootstrap import bootstrap
+from app.tests import baseTest
 
 
-class authTest(unittest.TestCase):
+class authTest(baseTest):
     """Test suite for the auth app."""
-
-    def setUp(self):
-        """Initialize app and test db."""
-        app, db = create_app(config_object=TestConfig)
-        app.app_context().push()
-        self.app = app.test_client()
-        self.db = db
-        bootstrap(app, db)
-
-    def tearDown(self):
-        """Destroy test db."""
-        self.db.session.remove()
-        self.db.drop_all()
 
     def test_unauthenticated_login_page_render(self):
         """Login page unauthenticated user page display test."""
