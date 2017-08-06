@@ -10,10 +10,10 @@ from app import db
 from auth.models import User
 
 
-class Category(db.Model):
-    """sqlalchemy Category model."""
+class Community(db.Model):
+    """sqlalchemy model and validation for the community table."""
 
-    __tablename__ = 'category'
+    __tablename__ = 'community'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(25), unique=True)
@@ -60,37 +60,37 @@ class Category(db.Model):
     @property
     def absolute_path(self):
         """Return domain independant absolute path."""
-        return "/category/%d/" % (self.id)
+        return "/community/%d/" % (self.id)
 
     def __unicode__(self):
-        """Text representation of the Category class instance."""
+        """Text representation of the Community class instance."""
         return '%s' % self.title
 
     def __repr__(self):
-        """Printable representation of the Category class instance."""
-        return "<Category(title='%r')>" % (self.title)
+        """Printable representation of the Community class instance."""
+        return "<Community(title='%r')>" % (self.title)
 
 
-class Item(db.Model):
-    """sqlalchemy Category model."""
+class Pick(db.Model):
+    """sqlalchemy model and validation for the Pick table."""
 
-    __tablename__ = 'item'
+    __tablename__ = 'pick'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(70), unique=True)
     link = db.Column(db.String(1000))
     author = db.Column(db.Integer, db.ForeignKey('user.id'))
-    category = db.Column(db.Integer, db.ForeignKey('category.id'))
+    community = db.Column(db.Integer, db.ForeignKey('community.id'))
     created = db.Column(db.DateTime)
     edited = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
-    def __init__(self, title, link, author, category,
+    def __init__(self, title, link, author, community,
                  created=None, edited=None):
         """Class constructor."""
         self.title = bleach.clean(title)
         self.link = bleach.clean(link)
         self.author = author
-        self.category = category
+        self.community = community
         if not created:
             self.created = datetime.utcnow()
         if not edited:
@@ -100,7 +100,7 @@ class Item(db.Model):
             self.validate_title,
             self.validate_link,
             self.validate_author,
-            self.validate_category
+            self.validate_community
         ]
 
     @reconstructor
@@ -112,7 +112,7 @@ class Item(db.Model):
             self.validate_title,
             self.validate_link,
             self.validate_author,
-            self.validate_category
+            self.validate_community
         ]
 
     def validate_title(self):
@@ -144,7 +144,7 @@ class Item(db.Model):
             self.errors["link"] = errors
 
     def validate_author(self):
-        """Author validator."""
+        """Author fk validator."""
         field = self.author
         errors = []
 
@@ -155,17 +155,17 @@ class Item(db.Model):
         if errors:
             self.errors["author"] = errors
 
-    def validate_category(self):
-        """Author validator."""
-        field = self.category
+    def validate_community(self):
+        """Community fk validator."""
+        field = self.community
         errors = []
 
-        category = Category.query.get(field)
-        if not category:
+        community = Community.query.get(field)
+        if not community:
             errors.append("Community doesn't exist")
 
         if errors:
-            self.errors["category"] = errors
+            self.errors["community"] = errors
 
     def is_valid(self):
         """Check if the values passed to the model are valid."""
@@ -176,9 +176,9 @@ class Item(db.Model):
         return True
 
     def __unicode__(self):
-        """Text representation of the Item class instance."""
+        """Text representation of the Pick class instance."""
         return '%s' % self.title
 
     def __repr__(self):
-        """Printable representation of the Item class instance."""
-        return "<Item(title='%r')>" % (self.title)
+        """Printable representation of the Pick class instance."""
+        return "<Pick(title='%r')>" % (self.title)

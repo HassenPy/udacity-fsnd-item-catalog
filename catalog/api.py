@@ -5,21 +5,22 @@ from flask_login import login_required
 from app import db
 from auth.models import User
 
-from .models import Category, Item
-from .serializers import CategorySerializer, ItemSerializer
+from .models import Community, Pick
+from .serializers import CommunitySerializer, PickSerializer
 
 catalogAPI = Blueprint('catalogAPI', __name__)
 
 
-@catalogAPI.route('/api/category/<int:id>/', methods=['GET', ])
-def get_category(id):
+@catalogAPI.route('/api/community/<int:id>/', methods=['GET', ])
+def get_community(id):
     """GET Method handler."""
-    category = Category.query.get(int(id))
+    community = Community.query.get(int(id))
 
-    if category:
-        # serialize category with items
-        category_serialized = CategorySerializer(category=category).serialize()
-        return jsonify(category_serialized)
+    if community:
+        # serialize community with picks
+        community_serialized = CommunitySerializer(community=community)\
+            .serialize()
+        return jsonify(community_serialized)
 
     message = jsonify({
         'error': 'resource not found.'
@@ -27,12 +28,12 @@ def get_category(id):
     return make_response(message, 404)
 
 
-@catalogAPI.route('/api/item/<int:id>/', methods=['GET', ])
-def get_item(id):
+@catalogAPI.route('/api/pick/<int:id>/', methods=['GET', ])
+def get_pick(id):
     """GET Method handler."""
-    item = Item.query.get(int(id))
-    if item:
-        serialized = ItemSerializer(item).serialize()
+    pick = Pick.query.get(int(id))
+    if pick:
+        serialized = PickSerializer(pick).serialize()
         return jsonify(serialized)
 
     message = jsonify({
@@ -41,21 +42,21 @@ def get_item(id):
     return make_response(message, 404)
 
 
-@catalogAPI.route('/api/item/<int:id>/', methods=['DELETE', ])
+@catalogAPI.route('/api/pick/<int:id>/', methods=['DELETE', ])
 @login_required
-def delete_item(id):
+def delete_pick(id):
     """DELETE method handler."""
-    item = Item.query.get(int(id))
+    pick = Pick.query.get(int(id))
     user = User.query.get(session['user_id'])
 
-    if item:
-        if (user.id != item.author) and (not user.is_admin()):
+    if pick:
+        if (user.id != pick.author) and (not user.is_admin()):
             message = jsonify({
                 "error": "unauthorized action."
             })
             return make_response(message, 401)
 
-        db.session.delete(item)
+        db.session.delete(pick)
         db.session.commit()
         message = jsonify({
             "message": "resource deleted."

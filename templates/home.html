@@ -20,46 +20,46 @@
   </div>
 </section>
 
-<section class="categories col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
+<section class="communities col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
   <header><h3 class="list-header">Communities</h3></header>
   <nav>
     <ul class="list">
-      {% for category in categories %}
+      {% for community in communities %}
         <li class="list-item">
-          <a href="{{ url_for('catalogApp.category_page', id=category.id) }}">
-            {{ category.title }}
+          <a href="{{ url_for('catalogApp.community_page', id=community.id) }}">
+            {{ community.title }}
           </a>
         </li>
       {% endfor %}
       <li class="list-item">
-        <a class="highlight-link" href="{{url_for('catalogApp.category_list')}}">
+        <a class="highlight-link" href="{{url_for('catalogApp.community_list')}}">
           All communities</a>
       </li>
     </ul>
   </nav>
 </section>
-<section class="items col-xs-12 col-sm-7 col-md-7">
+<section class="picks col-xs-12 col-sm-7 col-md-7">
   <header><h3 class="list-header">Latest posts</h3></header>
-  {% for item in items %}
+  {% for pick in picks %}
     <article class="list-item col-xs-12 pull-left">
       <header class="col-xs-12">
-        <a href="{{ item.link }}" target="_blank" rel="nofollow">
-          {{ item.title }}</a>
+        <a href="{{ pick.link }}" target="_blank" rel="nofollow">
+          {{ pick.title }}</a>
       </header>
       <div class="col-xs-12">
         <span class="col-xs-12">
-          <time class="timeago" datetime="{{item.created}}"></time>
-          <span class="author" data-author="/api/user/{{item.author}}/"></span>
-          <span class="category" data-category="/api/category/{{item.category}}/"></span>
+          <time class="timeago" datetime="{{pick.created}}"></time>
+          <span class="author" data-author="/api/user/{{pick.author}}/"></span>
+          <span class="community" data-community="/api/community/{{pick.community}}/"></span>
         </span>
         {% if current_user.is_authenticated and
-          item.author == current_user.id or current_user.admin
+          pick.author == current_user.id or current_user.admin
         %}
         <span class="col-xs-12">
-          <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+          <a href="{{url_for('catalogApp.pick_edit', id=pick.id)}}">
             <i class="icon-pencil"></i>
           </a>
-          <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+          <button data-href="/api/pick/{{pick.id}}/" class="btn-delete delete" role="button"
              data-toggle="modal" data-target="#deleteModal">
             <i class="icon-trash-empty"></i>
           </button>

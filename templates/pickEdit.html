@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %} Add a pick{% endblock %}
+{% block title %} Edit a pick{% endblock %}
 
 {% block content %}
 <section class="form crud">
   <header class="form-header col-xs-12">
-      <h2>Add a pick</h2>
+      <h2>Edit a pick</h2>
   </header>
-  <form class="row" id="itemForm" action="" method="post">
+  <form class="row" id="pickForm" action="" method="post">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
     {% if error %}
       <div class="col-xs-12 text-error" id="status">{{error}}</div>
@@ -15,7 +15,7 @@
 
     <fieldset class="form-group col-xs-12 {% if errors.title %} error {% endif %}">
       <label for="title">Descriptive Title</label>
-      <input id="title" type="text" name="title" value="{{ fields['title'] }}">
+      <input id="title" type="text" name="title" value="{{ pick.title }}">
       {% if errors.title %}
         {% for error in errors.title %}
           <div class="error-message">{{ error }}</div>
@@ -25,7 +25,7 @@
 
     <fieldset class="form-group col-xs-12 {% if errors.link %} error {% endif %}">
       <label for="link">Link</label>
-      <input id="link" type="url" name="link" value="{{fields['link']}}">
+      <input id="link" type="url" name="link" value="{{pick.link}}">
       {% if errors.link %}
         {% for error in errors.link %}
           <div class="error-message">{{ error }}</div>
@@ -33,19 +33,19 @@
       {% endif %}
     </fieldset>
 
-    <fieldset class="form-group col-xs-12 {% if errors.category %} error {% endif %}">
-      <label for="category">Category</label>
-      <select class="select" name="category" id="category">
-        {% for category in categories %}
-          {% if fields['category'] == category.id %}
-            <option value="{{ category.id }}" selected>{{ category.title }}</option>
+    <fieldset class="form-group col-xs-12 {% if errors.community %} error {% endif %}">
+      <label for="community">Category</label>
+      <select class="select" name="community" id="community">
+        {% for community in communities %}
+          {% if pick.community == community.id %}
+            <option value="{{ community.id }}" selected>{{ community.title }}</option>
           {% else %}
-            <option value="{{ category.id }}">{{ category.title }}</option>
+            <option value="{{ community.id }}">{{ community.title }}</option>
           {% endif %}
         {% endfor %}
       </select>
-      {% if errors.category %}
-        {% for error in errors.category %}
+      {% if errors.community %}
+        {% for error in errors.community %}
           <div class="error-message">{{ error }}</div>
         {% endfor %}
       {% endif %}

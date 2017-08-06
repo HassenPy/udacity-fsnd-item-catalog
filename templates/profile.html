@@ -20,27 +20,27 @@
   </div>
 </section>
 
-<section class="items full col-xs-12 col-sm-6 center-block">
+<section class="picks full col-xs-12 col-sm-6 center-block">
   <header>
     <h3 class="list-header">Your picks</h3>
     <div id="status"></div>
   </header>
-  {% for item in items %}
+  {% for pick in picks %}
     <article class="list-item pull-left">
       <header class="col-xs-12">
-      <a href="{{ item.link }}" target="_blank" rel="nofollow">
-        {{ item.title }}</a>
+      <a href="{{ pick.link }}" target="_blank" rel="nofollow">
+        {{ pick.title }}</a>
       </header>
       <div class="col-xs-12">
         <span class="col-xs-12">
-          <time class="timeago" datetime="{{item.created}}"></time>
-          <span class="category" data-category="/api/category/{{item.category}}/"></span>
+          <time class="timeago" datetime="{{pick.created}}"></time>
+          <span class="community" data-community="/api/community/{{pick.community}}/"></span>
         </span>
         <span class="col-xs-12">
-          <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+          <a href="{{url_for('catalogApp.pick_edit', id=pick.id)}}">
             <i class="icon-pencil"></i>
           </a>
-          <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+          <button data-href="/api/pick/{{pick.id}}/" class="btn-delete delete" role="button"
              data-toggle="modal" data-target="#deleteModal">
             <i class="icon-trash-empty"></i>
           </button>

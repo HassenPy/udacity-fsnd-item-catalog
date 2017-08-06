@@ -1,14 +1,14 @@
 """JSON serializers for the catalog app."""
 
 
-class CategorySerializer(object):
+class CommunitySerializer(object):
     """Minimal paginator to dict serializer."""
 
-    def __init__(self, category):
+    def __init__(self, community):
         """PaginationSerializer constructor."""
-        self.id = category.id
-        self.title = category.title
-        self.description = category.description
+        self.id = community.id
+        self.title = community.title
+        self.description = community.description
 
     def serialize(self):
         """Return dict representation of paginator."""
@@ -19,21 +19,21 @@ class CategorySerializer(object):
         }
 
 
-class ItemSerializer(object):
-    """Item object to dict serializer."""
+class PickSerializer(object):
+    """Pick object to dict serializer."""
 
-    def __init__(self, item):
-        """ItemSerializer constructor."""
-        self.item = item
+    def __init__(self, pick):
+        """PickSerializer constructor."""
+        self.pick = pick
 
     def serialize(self):
-        """Return dict representation of Item."""
+        """Return dict representation of Pick."""
         return {
-            'id': self.item.id,
-            'title': self.item.title,
-            'link': self.item.link,
-            'created': self.item.created,
-            'edited': self.item.edited,
-            'category': self.item.category,
-            'author': self.item.author
+            'id': self.pick.id,
+            'title': self.pick.title,
+            'link': self.pick.link,
+            'created': self.pick.created,
+            'edited': self.pick.edited,
+            'community': self.pick.community,
+            'author': self.pick.author
         }

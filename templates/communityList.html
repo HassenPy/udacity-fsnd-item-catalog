@@ -3,15 +3,15 @@
 {% block title %}All communities{% endblock %}
 
 {% block content %}
-<section class="categories col-sm-offset-2 col-sm-6">
+<section class="communities col-sm-offset-2 col-sm-6">
   <header>
     <h3 class="list-header">Communities</h3>
   </header>
   <ul class="list">
-    {% for category_l in categories %}
+    {% for community_l in communities %}
       <li class="list-item">
-        <a href="{{ url_for('catalogApp.category_page', id=category_l.id) }}">
-          {{ category_l.title }}</a>
+        <a href="{{ url_for('catalogApp.community_page', id=community_l.id) }}">
+          {{ community_l.title }}</a>
       </li>
     {% endfor %}
   </ul>

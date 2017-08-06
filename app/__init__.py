@@ -25,7 +25,7 @@ def create_app(config_object=Config):
 
     # A flask_sqlalchemy wrapper that takes care of session creation/removal.
     from auth.models import User
-    from catalog.models import Category, Item
+    from catalog.models import Community, Pick
     db.init_app(flasko)
 
     # Bind the LoginManager to the app.

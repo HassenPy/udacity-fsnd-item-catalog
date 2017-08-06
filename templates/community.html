@@ -20,51 +20,51 @@
   </div>
 </section>
 
-<section class="categories col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
+<section class="communities col-xs-12 col-sm-4 col-sm-offset-0 col-md-3 col-md-offset-1">
   <header>
     <h3 class="list-header">Communities</h3>
   </header>
   <nav>
     <ul class="list">
-      {% for category_l in categories %}
-        {% if category_l.id == category.id %}
+      {% for community_l in communities %}
+        {% if community_l.id == community.id %}
           <li class="list-item active">
-            <a href="{{ url_for('catalogApp.category_page', id=category_l.id) }}">
-              {{ category_l.title }}</a>
+            <a href="{{ url_for('catalogApp.community_page', id=community_l.id) }}">
+              {{ community_l.title }}</a>
           </li>
         {% else %}
           <li class="list-item">
-            <a href="{{ url_for('catalogApp.category_page', id=category_l.id) }}">
-              {{ category_l.title }}</a>
+            <a href="{{ url_for('catalogApp.community_page', id=community_l.id) }}">
+              {{ community_l.title }}</a>
           </li>
         {% endif %}
       {% endfor %}
     </ul>
   </nav>
 </section>
-<section class="items col-xs-12 col-sm-7 col-md-7">
+<section class="picks col-xs-12 col-sm-7 col-md-7">
   <header>
-    <h3 class="list-header col-xs-12">Latest {{ category.title }} community posts</h3>
+    <h3 class="list-header col-xs-12">Latest {{ community.title }} community posts</h3>
   </header>
-  {% for item in items['items'] %}
+  {% for pick in picks['items'] %}
     <article class="list-item pull-left">
       <header class="col-xs-12">
-        <a href="{{ item.link }}" target="_blank" rel="nofollow">
-          {{ item.title }}</a>
+        <a href="{{ pick.link }}" target="_blank" rel="nofollow">
+          {{ pick.title }}</a>
       </header>
       <div class="col-xs-12">
         <span class="col-xs-12">
-          <time class="timeago" datetime="{{item.created}}"></time>
-          <span class="author" data-author="/api/user/{{item.author}}/"></span>
+          <time class="timeago" datetime="{{pick.created}}"></time>
+          <span class="author" data-author="/api/user/{{pick.author}}/"></span>
         </span>
         {% if current_user.is_authenticated and
-          item.author == current_user.id or current_user.admin
+          pick.author == current_user.id or current_user.admin
         %}
         <span class="col-xs-12">
-          <a href="{{url_for('catalogApp.item_edit', id=item.id)}}">
+          <a href="{{url_for('catalogApp.pick_edit', id=pick.id)}}">
             <i class="icon-pencil"></i>
           </a>
-          <button data-href="/api/item/{{item.id}}/" class="btn-delete delete" role="button"
+          <button data-href="/api/pick/{{pick.id}}/" class="btn-delete delete" role="button"
              data-toggle="modal" data-target="#deleteModal">
             <i class="icon-trash-empty"></i>
           </button>
@@ -76,15 +76,15 @@
   <footer>
     <nav class="col-xs-12 text-center">
       <ul class="pager">
-        {% if items.prev_num %}
+        {% if picks.prev_num %}
           <li>
-            <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{items.prev_num}}">
+            <a href="{{url_for('catalogApp.community_page', id=community.id)}}?o={{picks.prev_num}}">
               Previous</a>
           </li>
         {% endif %}
-        {% if items.next_num %}
+        {% if picks.next_num %}
         <li>
-          <a href="{{url_for('catalogApp.category_page', id=category.id)}}?o={{items.next_num}}">
+          <a href="{{url_for('catalogApp.community_page', id=community.id)}}?o={{picks.next_num}}">
             Next</a>
         </li>
         {% endif %}
