@@ -161,14 +161,21 @@ def item_edit(id):
                 errors=None
             )
 
-        item.title = title
-        item.link = link
-        item.category = category
-        if item.is_valid():
+        # This is required to prevent automatic flushes
+        # This is used since if you post with a non-existant category id
+        # you will get a category field insert error on .is_valid() call.
+        with db.session.no_autoflush:
+            item.title = title
+            item.link = link
+            item.category = category
+            is_valid = item.is_valid()
+
+        if is_valid:
             try:
                 db.session.commit()
                 return redirect('/')
             except IntegrityError:
+                db.session.rollback()
                 return render_template(
                     'itemEdit.html',
                     categories=categories,
