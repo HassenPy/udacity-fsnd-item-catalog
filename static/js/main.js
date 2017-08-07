@@ -15,10 +15,10 @@ $(function(){
       });
     });
 
-    var categories = $(".category");
-    categories.each(function(author){
-      elm = $(categories[author]);
-      url = elm.data('category');
+    var communities = $(".community");
+    communities.each(function(author){
+      elm = $(communities[author]);
+      url = elm.data('community');
       $.ajax({
           method: "GET",
           url: url,
