@@ -1,6 +1,5 @@
 """Bootstrap script to initialize the app."""
 from app import create_app
-
 from auth.models import User
 from catalog.models import Community, Pick
 
@@ -8,8 +7,8 @@ from catalog.models import Community, Pick
 def bootstrap(app, db):
     """Bootstrap script, run once before app usage."""
     app.app_context().push()
+    db.drop_all()
 
-    print("Initiating engine...")
     db.create_all()
     user = User(username="user", password="12345678",
                 email="h@gmail.com")
