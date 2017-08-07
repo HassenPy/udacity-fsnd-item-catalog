@@ -1,0 +1,2 @@
+CREATE DATABASE pickydb;
+CREATE DATABASE pickydbtest;
