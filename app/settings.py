@@ -10,8 +10,7 @@ class Config(object):
     """Base flask config."""
 
     SQLALCHEMY_DATABASE_URI = 'postgresql:///pickydb'
-    SECRET_KEY = ('\xb8\x03\x89\xffS\xa7v\xe78Z3\x15\xab\xfeT~\xf9!|3l'
-                  '{\xa7\x18\x95\xf1\x17LfXQ;')
+    SECRET_KEY = os.environ['SECRET_KEY']
     DEBUG = True
     template_folder = os.path.join(os.path.dirname(base_dir),
                                    'templates')
@@ -20,13 +19,14 @@ class Config(object):
     SERVER_NAME = "localhost:5000"
     fb_app_id = fb_app['id']
     fb_app_secret = fb_app['secret']
+    SESSION_COOKIE_NAME = "sid"
 
 
 class TestConfig(object):
     """Base flask config."""
 
     SQLALCHEMY_DATABASE_URI = 'postgresql:///pickydbtest'
-    SECRET_KEY = 'd7af2b93103e488dbc55a08b7eca6176'
+    SECRET_KEY = os.environ['SECRET_KEY']
     DEBUG = True
     TESTING = True
     template_folder = os.path.join(os.path.dirname(base_dir),
@@ -34,3 +34,4 @@ class TestConfig(object):
     static_folder = os.path.join(os.path.dirname(base_dir),
                                  'static')
     SERVER_NAME = "localhost:5000"
+    SESSION_COOKIE_NAME = "sid"
