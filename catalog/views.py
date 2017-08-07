@@ -8,36 +8,36 @@ from app import db
 from auth.models import User
 from .models import Pick, Community
 
-catalogApp = Blueprint('catalogApp', __name__)
+catalogApp = Blueprint("catalogApp", __name__)
 
 
-@catalogApp.route('/', methods=['GET'])
+@catalogApp.route("/", methods=["GET"])
 def home():
     """Render the home page with latest picks."""
     communities = Community.query.limit(5).all()
     picks = Pick.query.order_by(Pick.created.desc()).limit(5).all()
     return render_template(
-        'home.html',
+        "home.html",
         communities=communities,
         picks=picks
     )
 
 
-@catalogApp.route('/community/', methods=['GET'])
+@catalogApp.route("/community/", methods=["GET"])
 def community_list():
     """Render a list with all the communities."""
     communities = Community.query.all()
     return render_template(
-        'communityList.html',
+        "communityList.html",
         communities=communities,
     )
 
 
-@catalogApp.route('/community/<int:id>/', methods=['GET'])
+@catalogApp.route("/community/<int:id>/", methods=["GET"])
 def community_page(id):
     """Return a community page with paginated picks."""
     community = Community.query.get(id)
-    offset = request.args.get('o', 1)
+    offset = request.args.get("o", 1)
     communities = Community.query.limit(5).all()
     if not community:
         abort(404)
@@ -52,38 +52,38 @@ def community_page(id):
         # Fetch paginated community picks
         picks = Pick.query.filter_by(community=id).paginate(offset, 10)
         return render_template(
-            'community.html',
+            "community.html",
             community=community,
             picks=picks,
             communities=communities
         )
     return render_template(
-        'community.html',
+        "community.html",
         community=community,
         picks=picks,
         communities=communities
     )
 
 
-@catalogApp.route('/pick/add/', methods=['GET', 'POST'])
+@catalogApp.route("/pick/add/", methods=["GET", "POST"])
 @login_required
 def pick_add():
     """Handle adding a new pick."""
     communities = Community.query.all()
-    title = request.form.get('title', '')
-    link = request.form.get('link', '')
-    community = request.form.get('community', '')
+    title = request.form.get("title", "")
+    link = request.form.get("link", "")
+    community = request.form.get("community", "")
     try:
         community = int(community)
     except ValueError:
-        community = ''
-    fields = {'title': title, 'link': link, 'community': community}
+        community = ""
+    fields = {"title": title, "link": link, "community": community}
 
-    if request.method == 'POST':
+    if request.method == "POST":
         # Check if required fields exist in POST values.
         if not (title and link and community):
             return render_template(
-                'pickAdd.html',
+                "pickAdd.html",
                 fields=fields,
                 communities=communities,
                 error="all fields are required",
@@ -91,30 +91,30 @@ def pick_add():
             )
 
         pick = Pick(title=title, link=link,
-                    community=community, author=session['user_id'])
+                    community=community, author=session["user_id"])
         if pick.is_valid():
             try:
                 db.session.add(pick)
                 db.session.commit()
-                return redirect('/')
+                return redirect("/")
             except IntegrityError:
                 db.session.rollback()
                 return render_template(
-                    'pickAdd.html',
+                    "pickAdd.html",
                     communities=communities,
                     fields=fields,
                     error=None,
-                    errors={'title': ['a Pick with same title already exists']}
+                    errors={"title": ["a Pick with same title already exists"]}
                 )
         return render_template(
-            'pickAdd.html',
+            "pickAdd.html",
             communities=communities,
             fields=fields,
             error=None,
             errors=pick.errors
         )
     return render_template(
-        'pickAdd.html',
+        "pickAdd.html",
         communities=communities,
         fields=fields,
         error=None,
@@ -122,7 +122,7 @@ def pick_add():
     )
 
 
-@catalogApp.route('/pick/<int:id>/edit/', methods=['GET', 'POST'])
+@catalogApp.route("/pick/<int:id>/edit/", methods=["GET", "POST"])
 @login_required
 def pick_edit(id):
     """Handle editing an existing pick."""
@@ -132,27 +132,27 @@ def pick_edit(id):
     communities = Community.query.all()
 
     # Check permission
-    user_id = session.get('user_id', False)
+    user_id = session.get("user_id", False)
     if user_id:
         admin = User.query.get(user_id).admin
 
     if (pick.author != user_id) and not admin:
         abort(401)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         # Check if required fields exist in POST values.
-        title = request.form.get('title', '')
-        link = request.form.get('link', '')
-        community = request.form.get('community', '')
+        title = request.form.get("title", "")
+        link = request.form.get("link", "")
+        community = request.form.get("community", "")
         # a little type conversion for template comparison
         try:
             community = int(community)
         except ValueError:
-            community = ''
+            community = ""
 
         if not (title and link and community):
             return render_template(
-                'pickEdit.html',
+                "pickEdit.html",
                 pick=pick,
                 communities=communities,
                 error="all fields are required",
@@ -171,25 +171,25 @@ def pick_edit(id):
         if is_valid:
             try:
                 db.session.commit()
-                return redirect('/')
+                return redirect("/")
             except IntegrityError:
                 db.session.rollback()
                 return render_template(
-                    'pickEdit.html',
+                    "pickEdit.html",
                     communities=communities,
                     pick=pick,
                     error=None,
-                    errors={'title': ['a Pick with same title already exists']}
+                    errors={"title": ["a Pick with same title already exists"]}
                 )
         return render_template(
-            'pickEdit.html',
+            "pickEdit.html",
             communities=communities,
             pick=pick,
             error=None,
             errors=pick.errors
         )
     return render_template(
-        'pickEdit.html',
+        "pickEdit.html",
         communities=communities,
         pick=pick,
         error=None,
@@ -197,13 +197,13 @@ def pick_edit(id):
     )
 
 
-@catalogApp.route('/profile/', methods=['GET'])
+@catalogApp.route("/profile/", methods=["GET"])
 @login_required
 def user_profile():
     """Render the user profile showing his shared picks."""
-    user_id = session['user_id']
+    user_id = session["user_id"]
     picks = Pick.query.filter_by(author=user_id).all()
     return render_template(
-        'profile.html',
+        "profile.html",
         picks=picks
     )
