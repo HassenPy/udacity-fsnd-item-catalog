@@ -1,5 +1,6 @@
 """Catalog views."""
 from flask import Blueprint, jsonify, make_response, request
+from flask_login import login_user
 
 from app import db
 from auth.models import User
@@ -59,6 +60,9 @@ def fbsignup():
     )
     db.session.add(user)
     db.session.commit()
+
+    user = User.query.filter_by(username=username).first()
+    login_user(user)
     return jsonify({
         "message": "You are now a member of the Picky community!"
     })

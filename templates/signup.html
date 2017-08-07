@@ -17,7 +17,7 @@
   </header>
   <form class="row" action="" method="POST">
     <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
-    <div class="col-xs-12 text-error" id="status"></div>
+    <div class="col-xs-12" id="status"></div>
 
     <fieldset class="form-group col-xs-12 {% if errors.username %}error{% endif %}">
       <label for="username">Username</label>
@@ -88,13 +88,23 @@
     var response;
     FB.api('/me', function(response) {
       csrf_token = $('input[name=_csrf_token]')[0].value;
+      $("#status").text("Please wait while we sign you up ...");
       $.post('/fbsignup', {
           'access_token': access_token,
           '_csrf_token': csrf_token
-      }).fail(function(response){
-        data = JSON.parse(response.responseText);
-        $("#status").text(data.message);
-      });
+      })
+        .done(function(response){
+          $("#status").toggleClass("text-success");
+          $("#status").text(response.message);
+          setTimeout(function(){
+            window.location.replace("/")
+          }, 1000);
+        })
+        .fail(function(response){
+          data = JSON.parse(response.responseText);
+          $("#status").text(data.message);
+          $("#status").toggleClass("text-error");
+        });
     });
   }
 </script>
