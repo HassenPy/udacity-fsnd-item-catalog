@@ -46,5 +46,8 @@ Create an environment variable for the `SECRET_KEY` and `FLASK_APP`:
 `export SECRET_KEY='secret_key';`  
 `export FLASK_APP='run.py';`  
 
+Test the app:
+`python test.py`
+
 Run the app:
 `flask run -h 0.0.0.0 -p 8000`
