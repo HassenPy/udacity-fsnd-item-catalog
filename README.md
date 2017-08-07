@@ -25,7 +25,7 @@ psql -f commands.sql
 ```  
 
 #### Create the facebook app:
-You need to create a facebook app for the facebook login/signup to work:
+You need to create a facebook app for the facebook login/signup to work:  
 1- Go to https://developers.facebook.com  
 2- Add a new app  
 3- Click on facebook login and choose setup.  
@@ -42,7 +42,7 @@ You need to create a facebook app for the facebook login/signup to work:
 First you need to install the dependencies:  
 `pip3 install -r requirements.txt`
 
-Create an environment variable for the SECRET_KEY and FLASK_APP:  
+Create an environment variable for the `SECRET_KEY` and `FLASK_APP`:  
 `export SECRET_KEY='secret_key';`  
 `export FLASK_APP='run.py';`  
 
