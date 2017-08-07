@@ -13,7 +13,7 @@ from auth.models import User
 class Community(db.Model):
     """sqlalchemy model and validation for the community table."""
 
-    __tablename__ = 'community'
+    __tablename__ = "community"
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(25), unique=True)
@@ -64,7 +64,7 @@ class Community(db.Model):
 
     def __unicode__(self):
         """Text representation of the Community class instance."""
-        return '%s' % self.title
+        return "%s" % self.title
 
     def __repr__(self):
         """Printable representation of the Community class instance."""
@@ -74,13 +74,13 @@ class Community(db.Model):
 class Pick(db.Model):
     """sqlalchemy model and validation for the Pick table."""
 
-    __tablename__ = 'pick'
+    __tablename__ = "pick"
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(70), unique=True)
     link = db.Column(db.String(1000))
-    author = db.Column(db.Integer, db.ForeignKey('user.id'))
-    community = db.Column(db.Integer, db.ForeignKey('community.id'))
+    author = db.Column(db.Integer, db.ForeignKey("user.id"))
+    community = db.Column(db.Integer, db.ForeignKey("community.id"))
     created = db.Column(db.DateTime)
     edited = db.Column(db.DateTime, onupdate=datetime.utcnow)
 
@@ -177,7 +177,7 @@ class Pick(db.Model):
 
     def __unicode__(self):
         """Text representation of the Pick class instance."""
-        return '%s' % self.title
+        return "%s" % self.title
 
     def __repr__(self):
         """Printable representation of the Pick class instance."""

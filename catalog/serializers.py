@@ -13,9 +13,9 @@ class CommunitySerializer(object):
     def serialize(self):
         """Return dict representation of paginator."""
         return {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description,
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
         }
 
 
@@ -29,11 +29,11 @@ class PickSerializer(object):
     def serialize(self):
         """Return dict representation of Pick."""
         return {
-            'id': self.pick.id,
-            'title': self.pick.title,
-            'link': self.pick.link,
-            'created': self.pick.created,
-            'edited': self.pick.edited,
-            'community': self.pick.community,
-            'author': self.pick.author
+            "id": self.pick.id,
+            "title": self.pick.title,
+            "link": self.pick.link,
+            "created": self.pick.created,
+            "edited": self.pick.edited,
+            "community": self.pick.community,
+            "author": self.pick.author
         }

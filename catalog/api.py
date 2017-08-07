@@ -8,12 +8,12 @@ from auth.models import User
 from .models import Community, Pick
 from .serializers import CommunitySerializer, PickSerializer
 
-catalogAPI = Blueprint('catalogAPI', __name__)
+catalogAPI = Blueprint("catalogAPI", __name__)
 
 
-@catalogAPI.route('/api/community/<int:id>/', methods=['GET', ])
+@catalogAPI.route("/api/community/<int:id>/", methods=["GET", ])
 def get_community(id):
-    """GET Method handler."""
+    """Return a community object based on id."""
     community = Community.query.get(int(id))
 
     if community:
@@ -23,33 +23,34 @@ def get_community(id):
         return jsonify(community_serialized)
 
     message = jsonify({
-        'error': 'resource not found.'
+        "error": "resource not found."
     })
     return make_response(message, 404)
 
 
-@catalogAPI.route('/api/pick/<int:id>/', methods=['GET', ])
+@catalogAPI.route("/api/pick/<int:id>/", methods=["GET", ])
 def get_pick(id):
-    """GET Method handler."""
+    """Return a pick object based on id."""
     pick = Pick.query.get(int(id))
     if pick:
         serialized = PickSerializer(pick).serialize()
         return jsonify(serialized)
 
     message = jsonify({
-        'error': 'resource not found.'
+        "error": "resource not found."
     })
     return make_response(message, 404)
 
 
-@catalogAPI.route('/api/pick/<int:id>/', methods=['DELETE', ])
+@catalogAPI.route("/api/pick/<int:id>/", methods=["DELETE", ])
 @login_required
 def delete_pick(id):
-    """DELETE method handler."""
+    """Delete a pick object based on id."""
     pick = Pick.query.get(int(id))
-    user = User.query.get(session['user_id'])
+    user = User.query.get(session["user_id"])
 
     if pick:
+        # Check if user is the author of the pick.
         if (user.id != pick.author) and (not user.is_admin()):
             message = jsonify({
                 "error": "unauthorized action."
@@ -64,6 +65,6 @@ def delete_pick(id):
         return make_response(message, 200)
     else:
         message = jsonify({
-            'error': 'resource not found.'
+            "error": "resource not found."
         })
         return make_response(message, 404)

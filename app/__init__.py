@@ -23,12 +23,13 @@ def create_app(config_object=Config):
     flasko.config.from_object(config_object)
     flasko.jinja_env.globals['csrf_token'] = generate_csrf_token
 
-    # A flask_sqlalchemy wrapper that takes care of session creation/removal.
+    # Bind the flask-sqlalchemy db to the app.
+    # flask_sqlalchemy takes care of session creation/removal.
     from auth.models import User
     from catalog.models import Community, Pick
     db.init_app(flasko)
 
-    # Bind the LoginManager to the app.
+    # Bind the flask-login LoginManager to the app.
     login_manager = LoginManager()
     login_manager.init_app(flasko)
     register_user_loader(login_manager)
