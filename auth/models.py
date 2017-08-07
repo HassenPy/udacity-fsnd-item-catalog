@@ -7,14 +7,11 @@ from pyisemail import is_email
 
 from app import db
 
-# https://github.com/michaelherold/pyIsEmail
-# http://docs.sqlalchemy.org/en/latest/orm/mapped_attributes.html?highlight=validate#simple-validators
-
 
 class User(db.Model, UserMixin):
     """A fat model that handles both the db and login methods."""
 
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), unique=True)
@@ -57,6 +54,11 @@ class User(db.Model, UserMixin):
         field = self.username
         errors = []
 
+        user = self.query.filter_by(username=field).count()
+        if user:
+            errors.append(
+                    "username already used"
+            )
         if not str.isalnum(field):
             errors.append(
                     "username must only use alphanumerics"
@@ -144,12 +146,12 @@ class User(db.Model, UserMixin):
         return self.admin
 
     def get_id(self):
-        """Fetch user id on login."""
+        """Fetch user id on login, method required by flask-login."""
         return self.id
 
     def __unicode__(self):
         """Text representation of the User class instance."""
-        return '%s' % self.username
+        return "%s" % self.username
 
     def __repr__(self):
         """Printable representation of the User class instance."""
