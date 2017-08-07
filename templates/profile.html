@@ -25,6 +25,9 @@
     <h3 class="list-header">Your picks</h3>
     <div id="status"></div>
   </header>
+  {% if not picks %}
+  <p class="list-item">You haven't shared any pick.</p>
+  {% endif %}
   {% for pick in picks %}
     <article class="list-item pull-left">
       <header class="col-xs-12">
