@@ -32,7 +32,7 @@ You need to create a facebook app for the facebook login/signup to work:
 4- Choose the web option.  
 5- For the domain option put: `http://localhost:8000/`  
 6- now go to facebook login settings and add `http://localhost:8000/login` and `http://localhost:8000/` to the Valid OAuth redirect URIs" option and save.  
-7- Make a file named `fb_app.json` that has this structure:  
+7- In the app directory, make a file `fb_app.json` that has this structure:  
 `{
   "id": "your_app_id",
   "secret": "your_app_secret"
